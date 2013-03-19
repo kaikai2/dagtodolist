@@ -9,6 +9,7 @@
       "express": "3.0.3",
       "mongoose": "3.5.7",
       "async": "*",
-      "ejs": "*"
+      "ejs": "*",
+      "underscore": "1.4.4"
   }
 }
