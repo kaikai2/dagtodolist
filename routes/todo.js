@@ -70,7 +70,15 @@ _.extend(exports, {
         });
     },
     deleteById: function(id, req, res){
-        res.send(404);
+        //res.send(404);
+        Todo.remove({_id: new mongoose.Types.ObjectId(id)}, function(err){
+            if (err){
+                console.log(err);
+                res.send(500, err);
+            }else{
+                res.json({result: true});
+            }
+        })
     },
     get_all: function(req, res){
         Todo.find(function(err, todos){
