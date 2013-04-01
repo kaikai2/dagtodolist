@@ -1,8 +1,56 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+    //color: #00B7FF;
+}
+
+.todolist{
+    list-style: none;
+}
+.todolist li .toggle,
+.todolist li .destroy {
+    position: absolute;
+}
+.todolist li .destroy {
+    right: 10px;
+    top: 0px;
+}
+.todolist li label {
+    padding-left: 30px;
+}
+.todolist li .view {
+    position: relative;
+}
+.todolist li:not(.editing) .edit,
+.todolist li:not(.detail) .detail,
+.todolist li.editing .view {
+    display: none; 
+}
+
+.todolist .edit {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    font-size: 24px;
+    font-family: inherit;
+    line-height: 1.4em;
+    border: 0;
+    outline: none;
+    color: inherit;
+    padding: 6px;
+    border: 1px solid #999;
+    box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+    font-smoothing: antialiased;
 }

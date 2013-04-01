@@ -8,7 +8,7 @@ define(function(require, exports, module){
         defaults:{
             user: null,
             todolist: null,
-            
+            mytodolist: null,
         },
     },{
     });

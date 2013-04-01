@@ -10,52 +10,37 @@ define(function(require, exports, module) {
         events:{
         },
         initialize: function(){
-            this.listenTo(this.collection, 'change', this.onChange);
-            this.listenTo(this.collection, 'add', this.onAdd);
-            this.listenTo(this.collection, 'remove', this.onRemove);
-            this.templateObj = new jSmart(this.options.template);
+            this.ItemView = this.options.ItemView;
+            this.listenTo(this.collection, 'change:completed', this.fiterOne);
+            this.listenTo(this.collection, 'add', this.addOne);
+//            this.listenTo(this.collection, 'remove', this.onRemove);
+            this.listenTo(this.collection, 'all', this.render);
+            this.listenTo(this.collection, 'reset', this.addAll);
+//            this.templateObj = new jSmart(this.options.template);
         },
-        onChange: function(model){
-            var html = this.templateObj.fetch({model: model.attributes});
-            this.$el.find("[lid=" + model.cid + "]").replaceWith(
-                $('<li>').html(html).attr("lid", model.cid)
-            );
-            this.refreshListView();
-            if (this.options.mobileListView){
-                this.$el.children('ul').listview('refresh');
-            }
+        addOne: function(model){
+            var view = new this.ItemView({
+                model: model,
+                template: this.options.itemTemplate,
+            });
+            this.$el.append(view.render().el);
         },
-        onAdd: function(model){
-            var n = $("<li>").html(
-                this.templateObj.fetch({model: model.attributes})
-            ).attr("lid", model.cid);
-            //n.addClass('ui-li ui-li-static ui-btn-up-c');
-            this.refreshListView();
-            this.$el.children('ul').append(n);
-            if (this.options.mobileListView){
-                this.$el.children('ul').listview('refresh');
-            }
+        addAll: function(){
+            this.$el.html('');
+            this.collection.each(this.addOne, this);
         },
-        onRemove: function(model){
-            this.$el.find("[lid=" + model.cid + "]").remove();
+        filterOne: function(model){
+            model.trigger('visible');
         },
-        refreshListView: function(){
-            if (this.$el.children('ul').length == 0){
-                var ul = this.$el.html('<ul>').children('ul');
-                if (this.options.mobileListView){                    
-                    ul.attr('data-role', 'listview').listview();
-                }
-            }else if (this.options.mobileListView && !this.$el.children('ul').data('listview')){
-                this.$el.children('ul').listview();
-            }
+        filterAll: function(){
+            this.collection.each(this.filterOne, this);
         },
         render: function(){
-            this.refreshListView();
-            this.$el.children('ul').html('');
+            /*this.$el.children('ul').html('');
             var self = this;
             this.collection.forEach(function(item){
                 self.onAdd(item);
-            });
+            });*/
             //this.$el.children('ul').listview('refresh');
         },
 

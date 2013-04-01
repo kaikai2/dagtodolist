@@ -23,6 +23,7 @@ requirejs.config({
     shim: {
 	underscore: {exports: '_'},
 	backbone: {deps:["underscore", "jquery"], exports: "Backbone"},
+        bootstrap: {deps: ["jquery"]},
     }
 });
 requirejs(['underscore', 'smart-2.9.min'], function(_,s){
@@ -35,13 +36,22 @@ define(function(require, exports, module) {
     , backbone = require('backbone')
     , test = require('app/pages/test')
     , SideBarView = require('view/sidebar').SideBarView
+    , MyTodoListView = require('view/mytodolist').MyTodoListView
     , App = require('model/app').App
+    , Task = require('model/task').Task
+    , Tasks = require('model/task').Tasks
     , config = require('app/config');
 
-    var app = new App({});
+    var app = new App({
+        mytodolist: new Tasks({}),
+    });
     var sidebar = new SideBarView({
-        el: $("#sidebar"),
+        el: $("#sideBar"),
         model: app
+    });
+    var mytodolist = new MyTodoListView({
+        el: $("#mylist"),
+        collection: app.get('mytodolist'),
     });
 
 });

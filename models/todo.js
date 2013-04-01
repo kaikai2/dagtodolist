@@ -11,12 +11,12 @@ var todoSchema = mongoose.Schema({
     content: String,
     from: mongoose.Schema.Types.ObjectId,
     assigndTo: mongoose.Schema.Types.ObjectId,
-    dependOn: [mongoose.Schema.Types.ObjectId],
+    depends: [mongoose.Schema.Types.ObjectId],
     estimatedTimeInHours: Number,
     deadlineTime: Date,
     createTime: Date,
     closeTime: Date,
-    finished: Boolean,
+    done: Boolean,
 });
 
 _.extend(todoSchema.method, {
