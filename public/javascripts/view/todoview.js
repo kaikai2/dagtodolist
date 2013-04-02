@@ -74,6 +74,7 @@ define(function(require, exports, module) {
         close: function () {
             var value = this.$input.val().trim();
 
+            console.log('close editing mode with ', value);
             if (value) {
                 this.model.save({ name: value });
             } else {
@@ -92,7 +93,8 @@ define(function(require, exports, module) {
         // If you hit `enter`, we're through editing the item.
         updateOnEnter: function (e) {
             if (e.which === ENTER_KEY) {
-                this.close();
+                //this.close();
+                e.target.blur();
             }
         },
 
