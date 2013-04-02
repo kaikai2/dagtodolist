@@ -47,6 +47,9 @@ _.extend(exports, {
     },
     create: function(req, res){
         //res.send(404);
+        if (!req.session.userid){
+		req.session.userid = 1;
+	}
         console.assert(req.session && req.session.userid, "session.userid needed");
         Todo.create({
             name: req.param('name'),

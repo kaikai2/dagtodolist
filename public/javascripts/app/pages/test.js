@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     var $ = require('jquery');
-    var User = require('model/user').User;
-    var UserEvents = require('model/userevent').UserEvents;
+    //var User = require('model/user').User;
+    //var UserEvents = require('model/userevent').UserEvents;
     var Backbone = require('backbone');
     //var template = require('text!template/userinfo.tpl');
     var config = require('app/config');
