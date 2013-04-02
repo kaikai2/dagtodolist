@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone')
     , $ = require('jquery')
     , bootstrap = require('bootstrap')
+    , NewTodoDialog = require('view/newtododialog').NewTodoDialog
     , ENTER_KEY = 13
     , _ = require('underscore');
 
@@ -18,6 +19,7 @@ define(function(require, exports, module) {
             'keypress .edit': 'updateOnEnter',
             'blur .edit': 'close',
             'click .save': 'save',
+            'click .depend': 'newDepend',
             //"click #newTask": "onNewTask",
             //"keypress #newTask": "newOnEnter",
             //"click #maintab a": "onTab",
@@ -89,6 +91,14 @@ define(function(require, exports, module) {
                 deadlineTime: this.$(".deadline").val(),
             };
             this.model.save(value);
+        },
+        newDepend: function(){
+            var dlg = new NewTodoDialog({
+                el: $("#newtodo-dialog"),
+                dependents: this.model,
+                collection: this.collection,
+            });
+            dlg.render();
         },
         // If you hit `enter`, we're through editing the item.
         updateOnEnter: function (e) {

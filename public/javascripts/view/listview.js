@@ -22,6 +22,7 @@ define(function(require, exports, module) {
             var view = new this.ItemView({
                 model: model,
                 template: this.options.itemTemplate,
+                collection: this.collection,
             });
             this.$el.append(view.render().el);
         },

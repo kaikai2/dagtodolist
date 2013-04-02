@@ -9,6 +9,8 @@
 
   <body>
     <script src="/javascripts/lib/require.js" data-main="/javascripts/index.js"></script>
+
+    <!-- nav bar -->
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -20,7 +22,11 @@
         </div>
       </div>
     </div>
+
+    <!-- main -->
     <div class="row">
+
+      <!-- side bar  -->
       <div id="sideBar" class="span4 well">
         
         <ul class="nav nav-tabs nav-stacked" id="maintab">
@@ -30,11 +36,40 @@
         </ul>
       </div>
 
+      <!-- main frame -->
       <div id="main" class="span8 well">
         <div class="tab-content" id="maintabcontent">
+
+
+          <!-- mylist panel -->
           <div class="tab-pane active" id="mylist">
             <input type="text" id="newTask" name="newTask" placeholder="新任务">
             <button class="btn">新增任务</button>
+
+            <!-- dialog -->
+            <div class="modal hide fade" id="newtodo-dialog">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>新增前置任务</h3>
+              </div>
+              <div class="modal-body">
+                <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
+                <div class="input-prepend">
+                  <span class="add-on">标题</span>
+                  <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
+                </div>
+                <div class="input-prepend">
+                  <span class="add-on">内容</span>
+                  <textarea type="text" name="content" placeholder="任务内容"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a href="#" class="btn cancel">取消</a>
+                <a href="#" class="btn btn-primary add">新增</a>
+              </div>
+            </div>
+
+            <!-- template for a single todoview -->
             <script type="text/template" id="todolist-tpl">
               <div class="view">
                 <input class="toggle" type="checkbox" {$model.done ? 'checked' : ''}>
@@ -57,7 +92,22 @@
                   <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
                 </div>
                 {/if}
+                <div class="input-prepend input-append">
+                  <span class="add-on">状态</span>
+                  {if $model.done}
+                  <span class="add-on label">完成</span>
+                  {elseif $model.ready}
+                  <span class="add-on label label-success">就绪</span>
+                  {else}
+                  <span class="add-on label label-warning">阻塞</span>
+                  {/if}
+                </div>
+                <div class="">
+                  <ul class="todolist">
+                  </ul>
+                </div>
                 <button class="btn save">保存</button>
+                <button class="btn depend">新前置任务</button>
               </div>
               <!--
               <div class="app-task">
@@ -71,11 +121,17 @@
             <ul id="todolist" class="todolist">
             </ul>
           </div>
+
+
+          <!-- taskflow panel -->
           <div class="tab-pane" id="taskflow">
-<p>            task flow
+            <p>            task flow
           </div>
+
+
+          <!-- alltask panel -->
           <div class="tab-pane" id="alltask">
-   <p>         all task
+            <p>         all task
           </div>
         </div>
       </div>

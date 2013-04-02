@@ -1,4 +1,3 @@
-
 var _ = require('underscore')
 , mongoose = require('mongoose')
 , Todo = require('../models/todo').Todo;
@@ -84,6 +83,7 @@ _.extend(exports, {
         })
     },
     get_all: function(req, res){
+        var userid = req.session.userid || 1;
         Todo.find(function(err, todos){
             if (err){
                 console.log(err);
