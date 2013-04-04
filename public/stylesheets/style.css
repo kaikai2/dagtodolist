@@ -10,19 +10,17 @@ a {
 .todolist{
     list-style: none;
 }
-.todolist li .toggle,
-.todolist li .destroy {
+.todolist li .toggle {
     position: absolute;
 }
-.todolist li .destroy {
-    right: 10px;
-    top: 0px;
-}
+
 .todolist li label {
     padding-left: 30px;
 }
 .todolist li .view {
     position: relative;
+    padding: 10px;
+    border-top: 1px solid gray;
 }
 .todolist li:not(.editing) .edit,
 .todolist li:not(.detail) .detail,

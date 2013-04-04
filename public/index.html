@@ -14,7 +14,7 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <h1>大哥去干活</h1>
+          <h1>大哥去干活(DAGTodoList)</h1>
           <!--
               <button class="btn">我的任务</button>
               <button class="btn">关键路径</button>
@@ -43,9 +43,11 @@
 
           <!-- mylist panel -->
           <div class="tab-pane active" id="mylist">
-            <input type="text" id="newTask" name="newTask" placeholder="新任务">
-            <button class="btn">新增任务</button>
-
+            <div class="input-prepend input-append">
+              <span class="add-on">新任务名称</span>
+              <input type="text" id="newTask" name="newTask" placeholder="新任务">
+              <a class="add-on btn">新增任务</a>
+            </div>
             <!-- dialog -->
             <div class="modal hide fade" id="newtodo-dialog">
               <div class="modal-header">
@@ -71,10 +73,10 @@
 
             <!-- template for a single todoview -->
             <script type="text/template" id="todolist-tpl">
-              <div class="view">
+              <div class="view form-inline">
                 <input class="toggle" type="checkbox" {$model.done ? 'checked' : ''}>
                 <label class="name">{$model.name}</label>
-                <button class="btn destroy">删除</button>
+                <button class="btn destroy pull-right">删除</button>
               </div>
               <input class="edit" value="{$model.name}">
               <div class="detail">
@@ -97,13 +99,15 @@
                 {/if}
                 <div class="input-prepend input-append">
                   <span class="add-on">状态</span>
-                  {if $model.done}
-                  <span class="add-on label">完成</span>
-                  {elseif $model.ready}
-                  <span class="add-on label label-success">就绪</span>
-                  {else}
-                  <span class="add-on label label-warning">阻塞</span>
-                  {/if}
+                  <span class="add-on">
+                    {if $model.done}
+                    <span class="label">完成</span>
+                    {elseif $model.ready}
+                    <span class="label label-success">就绪</span>
+                    {else}
+                    <span class="label label-warning">阻塞</span>
+                    {/if}
+                  </span>
                 </div>
                 <div class="">
                   <ul class="todolist">
