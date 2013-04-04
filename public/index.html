@@ -55,15 +55,21 @@
                 <h3>新增前置任务</h3>
               </div>
               <div class="modal-body">
-                <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
-                <div class="input-prepend">
-                  <span class="add-on">标题</span>
-                  <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
-                </div>
-                <div class="input-prepend">
-                  <span class="add-on">内容</span>
-                  <textarea type="text" name="content" placeholder="任务内容"></textarea>
-                </div>
+		<div class="row">
+		  <div class="span2">
+                    <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
+		  </div>
+		  <div class="span3">
+                    <form>
+		      <fieldset>
+			<label>标题</label>
+			<input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
+			<label>内容</label>
+			<textarea row="3" name="content" placeholder="任务内容"></textarea>
+		      </fieldset>
+		    </form>
+		  </div>
+		</div>
               </div>
               <div class="modal-footer">
                 <a href="#" class="btn cancel">取消</a>
@@ -76,7 +82,7 @@
               <div class="view form-inline">
                 <input class="toggle" type="checkbox" {$model.done ? 'checked' : ''}>
                 <label class="name">{$model.name}</label>
-                <button class="btn destroy pull-right">删除</button>
+		<button class="btn destroy pull-right">删除</button>
               </div>
               <input class="edit" value="{$model.name}">
               <div class="detail">

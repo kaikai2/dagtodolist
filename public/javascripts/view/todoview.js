@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         
         events:{
             'click .toggle': 'toggleCompleted',
-            'click label.name': 'showDetail',
+            'click .view': 'showDetail',
             'dblclick label.name': 'edit',
             'click .destroy': 'clear',
             'keypress .edit': 'updateOnEnter',

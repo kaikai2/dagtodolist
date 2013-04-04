@@ -14,8 +14,6 @@ define(function(require, exports, module) {
         collection: null,
         templateObj: null,
         events:{
-            "click #newTask": "onNewTask",
-            "keypress #newTask": "newOnEnter",
             "click .cancel": "cancel",
             "click .add": "add",
         },
@@ -28,6 +26,7 @@ define(function(require, exports, module) {
         render: function(){
         },
 
+	// events
         add: function(){
             var self = this;
             this.model.save({
@@ -40,6 +39,9 @@ define(function(require, exports, module) {
                     self.dependents.set("depends", depends);
                     self.dependents.save();
                     self.collection.add(self.model);
+		    self.$el.modal('hide');
+		    self.model = null;
+		    self.dependents = null;
                 },
                 error: function(model, xhr, options){
                 }
@@ -49,22 +51,6 @@ define(function(require, exports, module) {
             this.$el.modal('hide');
             this.model.destroy();
             this.dependents = null;
-        },
-
-        // events
-        onNewTask: function(){
-            
-            //this.model.
-        },
-        newOnEnter: function(e){
-            if (e.which !== ENTER_KEY || !this.$input.val().trim()) {
-                return;
-            }
-            
-            this.collection.create({
-                name: this.$input.val().trim()
-            });
-            this.$input.val('');
         },
 
     });
