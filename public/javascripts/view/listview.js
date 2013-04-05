@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         events:{
         },
         initialize: function(){
+            this.views = [];
             this.ItemView = this.options.ItemView;
             this.listenTo(this.collection, 'change', this.filterOne);
             this.listenTo(this.collection, 'add', this.addOne);
@@ -25,8 +26,11 @@ define(function(require, exports, module) {
                 collection: this.collection,
             });
             this.$el.append(view.render().el);
+            this.views.push(view);
         },
         addAll: function(){
+            _.each(this.views, function(view){view.remove();});
+            this.views.length = 0;
             this.$el.html('');
             this.collection.each(this.addOne, this);
         },
@@ -44,6 +48,15 @@ define(function(require, exports, module) {
             });*/
             //this.$el.children('ul').listview('refresh');
         },
-
+        fire: function(eventName){
+            this.collection.each(function(model){
+                model.trigger(eventName);
+            }, this);
+        },
+        remove: function(){
+            _.each(this.views, function(view){view.remove();});
+            this.views.length = 0;
+            Backbone.View.remove.apply(this, arguments);
+        }
     });
 });

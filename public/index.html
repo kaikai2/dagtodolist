@@ -115,6 +115,8 @@
                   <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
                 </div>
                 {/if}
+                {if $model.depends|count == 0}
+                {else}
                 <div class="">
                   <label>前置任务</label>
                   <ul class="todolist depends">
@@ -143,6 +145,7 @@
                     {/foreach}
                   </ul>
                 </div>
+                {/if}
                 <button class="btn save">保存</button>
                 <button class="btn depend">新前置任务</button>
               </div>

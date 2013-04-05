@@ -31,6 +31,7 @@ define(function(require, exports, module) {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'visible', this.toggleVisible);
+            this.listenTo(this.model, 'complete:depends', this.checkDepends);
         },
         
         render: function(){
@@ -54,7 +55,9 @@ define(function(require, exports, module) {
         showDetail: function(){
             this.$el.toggleClass('detail');
         },
-
+        checkDepends: function(){
+            this.render();
+        },
         toggleVisible: function () {
             this.$el.toggleClass('hidden', this.isHidden());
         },
@@ -70,6 +73,7 @@ define(function(require, exports, module) {
         // Toggle the `"completed"` state of the model.
         toggleCompleted: function () {
             this.model.toggle();
+            this.collection.trigger('complete');
             return false;
         },
 

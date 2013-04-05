@@ -21,6 +21,7 @@ define(function(require, exports, module) {
             //this.templateObj = new jSmart(this.options.template);
             //this.$el.find("#maintab :first").tab("show");
             this.$input = this.$("#newTask");
+            this.listenTo(this.collection, "complete", this.onComplete);
             this.list = new ListView({
                 el: this.$("#todolist"),
                 ItemView: TodoView,
@@ -55,7 +56,9 @@ define(function(require, exports, module) {
             
             this.onNewTask();
         },
-
+        onComplete: function(){
+            this.list.fire("complete:depends");
+        },
         onTab: function(e){
             e.preventDefault();
             $(e.target).tab('show');
