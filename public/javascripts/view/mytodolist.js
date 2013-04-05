@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         collection: null,
         templateObj: null,
         events:{
-            "click #newTask": "onNewTask",
+            "click .newTask": "onNewTask",
             "keypress #newTask": "newOnEnter",
             //"click #maintab a": "onTab",
         },
@@ -38,11 +38,8 @@ define(function(require, exports, module) {
 
         // events
         onNewTask: function(){
-            
-            //this.model.
-        },
-        newOnEnter: function(e){
-            if (e.which !== ENTER_KEY || !this.$input.val().trim()) {
+            var name = this.$input.val().trim();
+            if (!name){
                 return;
             }
             
@@ -50,6 +47,13 @@ define(function(require, exports, module) {
                 name: this.$input.val().trim()
             });
             this.$input.val('');
+        },
+        newOnEnter: function(e){
+            if (e.which !== ENTER_KEY){
+                return;
+            }
+            
+            this.onNewTask();
         },
 
         onTab: function(e){

@@ -1,5 +1,6 @@
 var _ = require('underscore')
 , mongoose = require('mongoose')
+, async = require('async')
 , Todo = require('../models/todo').Todo;
 
 _.extend(exports, {
@@ -16,23 +17,48 @@ _.extend(exports, {
     updateById: function(id, req, res){
         //res.send(404);
         console.assert(req.session && req.session.userid, "session.userid needed");
-        var newData = {
-            name: req.param('name'),
-            content: req.param('content') || '',
-            //from: new mongoose.Types.ObjectId(req.session.userid), no way to overide 'from'
-            assignedTo: req.param('assignedTo'),
-            depends: req.param('depends'),
-            estimatedTimeInHours: req.param('estimatedTimeInHours'),
-            deadlineTime: new Date(req.param('deadlineTime')),
-            //createTime: new Date(),
-            done: req.param('done')
-        };
-        if (newData.done){
-            newData.closeTime = new Date();
-        }
-        Todo.update({
-            _id: new mongoose.Types.ObjectId(id)
-        }, newData, function(err, numberAffected, raw){
+        var depends = req.param('depends') || [];
+
+        async.waterfall([
+            function(cb){
+                console.log('findPerior');
+                if (depends.length == 0){
+                    cb(null, 0);
+                    return;
+                }
+                var dependsObjId = _.map(depends, function(id){
+                    return new mongoose.Types.ObjectId(id);
+                });
+                
+                Todo.find({id: {$in: dependsObjId}, done: false}).count(cb);                
+            },
+            function(periorCount, cb){
+                console.log('doUpdate', periorCount, cb);
+                var newData = {
+                    name: req.param('name'),
+                    content: req.param('content') || '',
+                    //from: new mongoose.Types.ObjectId(req.session.userid), no way to overide 'from'
+                    assignedTo: req.param('assignedTo'),
+                    depends: depends,
+                    estimatedTimeInHours: req.param('estimatedTimeInHours'),
+                    deadlineTime: new Date(req.param('deadlineTime')),
+                    //createTime: new Date(),
+                    done: req.param('done'),
+                    ready: periorCount == 0,
+                };
+                if (newData.done){
+                    newData.closeTime = new Date();
+                }
+                console.log('update,newData', newData);
+                Todo.update({
+                    _id: new mongoose.Types.ObjectId(id)
+                }, newData, function(err, numberAffected, raw){
+                    console.log(err, numberAffected, raw);
+                    cb(err, numberAffected, raw);
+                });
+            },
+        ], function(err, numberAffected, raw){
+            console.log('end: ');
             if (err){
                 console.log(err);
                 res.send(500, err);
@@ -45,7 +71,6 @@ _.extend(exports, {
         });
     },
     create: function(req, res){
-        //res.send(404);
         if (!req.session.userid){
 		req.session.userid = 1;
 	}
@@ -60,13 +85,14 @@ _.extend(exports, {
             deadlineTime: new Date(new Date().getTime() + 86400),
             createTime: new Date(),
             //closeTime: new Date(),
-            done: false
+            done: false,
+            ready: true,
         }, function(err, todo){
             if (err){
                 console.log(err);
                 res.send(500, err);
             }else{
-                console.log(todo);
+                console.log(todo, todo.ready);
                 res.json(todo);
             }
         });

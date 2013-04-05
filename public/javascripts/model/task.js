@@ -11,13 +11,14 @@ define(function(require, exports, module){
         },
         defaults:{
             name: null,
-            finished: false,
+            done: false,
+            ready: true,
             depends: [],
             begin: null,
             //...
         },
         toggle: function(){
-            this.set('finished', !this.get('finished'));
+            this.set('done', !this.get('done'));
         },
     },{
     });

@@ -38,7 +38,7 @@ define(function(require, exports, module) {
                 this.templateObj.fetch({
                     model: this.model.toJSON()
                 }));
-            this.$el.toggleClass('completed', this.model.get('completed'));
+            this.$el.toggleClass('completed', this.model.get('done'));
             this.toggleVisible();
             this.$input = this.$('.edit');
             return this;
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
         },
 
         isHidden: function () {
-            var isCompleted = this.model.get('completed');
+            var isCompleted = this.model.get('done');
             return false;/*(// hidden cases only
                (!isCompleted && app.TodoFilter === 'completed') ||
                     (isCompleted && app.TodoFilter === 'active')
@@ -63,6 +63,7 @@ define(function(require, exports, module) {
         // Toggle the `"completed"` state of the model.
         toggleCompleted: function () {
             this.model.toggle();
+            return false;
         },
 
         // Switch this view into `"editing"` mode, displaying the input field.

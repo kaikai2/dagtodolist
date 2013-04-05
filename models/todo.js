@@ -17,6 +17,7 @@ var todoSchema = mongoose.Schema({
     createTime: Date,
     closeTime: Date,
     done: Boolean,
+    ready: Boolean,
 });
 
 _.extend(todoSchema.method, {

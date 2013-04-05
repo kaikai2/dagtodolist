@@ -46,7 +46,7 @@
             <div class="input-prepend input-append">
               <span class="add-on">新任务名称</span>
               <input type="text" id="newTask" name="newTask" placeholder="新任务">
-              <a class="add-on btn">新增任务</a>
+              <a class="add-on btn newTask">新增任务</a>
             </div>
             <!-- dialog -->
             <div class="modal hide fade" id="newtodo-dialog">
@@ -80,7 +80,7 @@
             <!-- template for a single todoview -->
             <script type="text/template" id="todolist-tpl">
               <div class="view form-inline">
-                <input class="toggle" type="checkbox" {$model.done ? 'checked' : ''}>
+                <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
                 <label class="name">{$model.name}</label>
 		<button class="btn destroy pull-right">删除</button>
               </div>
