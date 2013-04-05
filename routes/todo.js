@@ -63,10 +63,11 @@ _.extend(exports, {
                 console.log(err);
                 res.send(500, err);
             }else{
-                res.json({
+                /*res.json({
                     numberAffected:numberAffected,
                     raw: raw
-                });
+                });*/
+                res.json({});
             }
         });
     },

@@ -11,7 +11,7 @@ define(function(require, exports, module) {
         },
         initialize: function(){
             this.ItemView = this.options.ItemView;
-            this.listenTo(this.collection, 'change:completed', this.fiterOne);
+            this.listenTo(this.collection, 'change', this.filterOne);
             this.listenTo(this.collection, 'add', this.addOne);
 //            this.listenTo(this.collection, 'remove', this.onRemove);
             this.listenTo(this.collection, 'all', this.render);

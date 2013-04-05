@@ -86,8 +86,20 @@
               </div>
               <input class="edit" value="{$model.name}">
               <div class="detail">
+                <div class="input-prepend input-append">
+                  <span class="add-on">状态</span>
+                  <span class="add-on">
+                    {if $model.done}
+                    <span class="label">完成</span>
+                    {elseif $model.ready}
+                    <span class="label label-success">就绪</span>
+                    {else}
+                    <span class="label label-warning">阻塞</span>
+                    {/if}
+                  </span>
+                </div>
                 <div class="input">
-                  <textarea>{$model.content}</textarea>
+                  <textarea class="content">{$model.content}</textarea>
                 </div>
                 <div class="input-prepend">
                   <span class="add-on">创建时间</span>
@@ -103,34 +115,52 @@
                   <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
                 </div>
                 {/if}
-                <div class="input-prepend input-append">
-                  <span class="add-on">状态</span>
-                  <span class="add-on">
-                    {if $model.done}
-                    <span class="label">完成</span>
-                    {elseif $model.ready}
-                    <span class="label label-success">就绪</span>
-                    {else}
-                    <span class="label label-warning">阻塞</span>
-                    {/if}
-                  </span>
-                </div>
                 <div class="">
-                  <ul class="todolist">
+                  <label>前置任务</label>
+                  <ul class="todolist depends">
+                    {foreach $model.depends as $i => $id}
+                    {$dependModel = $util->getmodel($id)}
+                    {if $dependModel}
+                    <li>
+                      <div cid="{$id}">
+                        <div class="input-prepend input-append">
+                          <span class="add-on">状态</span>
+                          <span class="add-on">
+                            {if $dependModel.done}
+                            <span class="label">完成</span>
+                            {elseif $dependModel.ready}
+                            <span class="label label-success">就绪</span>
+                            {else}
+                            <span class="label label-warning">阻塞</span>
+                            {/if}
+                          </span>
+                        </div>
+                        {$dependModel.name}
+                        <button class="btn remove">解除依赖</button>
+                      </div>
+                    </li>
+                    {/if}
+                    {/foreach}
                   </ul>
                 </div>
                 <button class="btn save">保存</button>
                 <button class="btn depend">新前置任务</button>
               </div>
               <!--
-              <div class="app-task">
-                <input class="toggle" type="checkbox">
-                <label>{$name}</label>
-                <button class="btn">删除</button>
-                <button class="btn">完成</button>
-                <button class="btn">开始</button>
-              </div>-->
+                  <div class="app-task">
+                    <input class="toggle" type="checkbox">
+                    <label>{$name}</label>
+                    <button class="btn">删除</button>
+                    <button class="btn">完成</button>
+                    <button class="btn">开始</button>
+                  </div>-->
             </script>
+
+            <!-- template for depends in single todoview -->
+            <script type="text/template" id="dependslist-tpl">
+            </script>
+
+
             <ul id="todolist" class="todolist">
             </ul>
           </div>

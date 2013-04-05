@@ -34,9 +34,16 @@ define(function(require, exports, module) {
         },
         
         render: function(){
+            var self = this;
             this.$el.html(
                 this.templateObj.fetch({
-                    model: this.model.toJSON()
+                    model: this.model.toJSON(),
+                    util: {
+                        getmodel: function(id){
+                            var model = self.collection.get(id);
+                            return model ? model.toJSON() : null;
+                        },
+                    },
                 }));
             this.$el.toggleClass('completed', this.model.get('done'));
             this.toggleVisible();
@@ -90,7 +97,11 @@ define(function(require, exports, module) {
         save: function(){
             var value = {
                 deadlineTime: this.$(".deadline").val(),
+                content: this.$(".content").val(),
+                depends: this.$(".depends").val(),
+                estimatedTimeInHours: this.$(".estimatedTimeInHours").val(),
             };
+            
             this.model.save(value);
         },
         newDepend: function(){

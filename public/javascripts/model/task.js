@@ -25,6 +25,18 @@ define(function(require, exports, module){
     var Tasks = Backbone.Collection.extend({
         model: Task,
         url: '/todo',
+        sync: function(method, model, options){
+            if (method == "read"){
+                
+            }
+            Backbone.sync.apply(this, arguments);
+        },
+        depends: function(model){
+            var ids = _.object(model.get('depends'), true);
+            return new Tasks(this.filter(function(m){
+                return m.id in ids;
+            }));
+        }
     });
     _.extend(exports, {
         Task: Task,
