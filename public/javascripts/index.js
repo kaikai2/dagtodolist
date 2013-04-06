@@ -33,7 +33,7 @@ requirejs(['underscore', 'smart-2.9.min'], function(_,s){
 define(function(require, exports, module) {
     var $ = require('jquery')
     , _ = require('underscore')
-    , backbone = require('backbone')
+    , Backbone = require('backbone')
     , test = require('app/pages/test')
     , SideBarView = require('view/sidebar').SideBarView
     , MyTodoListView = require('view/mytodolist').MyTodoListView

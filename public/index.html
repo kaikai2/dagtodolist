@@ -31,9 +31,15 @@
       <div id="sideBar" class="span4">
         <div class="well">
           <ul class="nav nav-tabs nav-stacked" id="maintab">
-            <li class="active"><a href="#mylist" data-toggle="tab" data-target="#mylist">我的任务</a></li>
-            <li><a href="#taskflow" data-toggle="tab" data-target="#taskflow">任务流</a></li>
-            <li><a href="#alltask" data-toggle="tab" data-target="#alltask">所有任务</a></li>
+            <li class="active">
+              <a href="#mylist" data-toggle="tab" data-target="#mylist">我的任务</a>
+            </li>
+            <li>
+              <a href="#taskflow" data-toggle="tab" data-target="#taskflow">任务流</a>
+            </li>
+            <li>
+              <a href="#alltask" data-toggle="tab" data-target="#alltask">所有任务</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -52,7 +58,7 @@
                 <a class="add-on btn newTask">新增任务</a>
               </div>
               <!-- dialog -->
-              <div class="modal hide fade" id="newtodo-dialog">
+              <script type="text/template" id="newtodo-dialog-tpl"> 
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                   <h3>新增前置任务</h3>
@@ -62,23 +68,45 @@
 		    <div class="span2">
                       <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
 		    </div>
-		    <div class="span3">
-                      <form>
-		        <fieldset>
-			  <label>标题</label>
-			  <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
-			  <label>内容</label>
-			  <textarea row="3" name="content" placeholder="任务内容"></textarea>
-		        </fieldset>
-		      </form>
-		    </div>
-		  </div>
+
+                    <div class="span4">
+                      <ul class="nav nav-tabs">
+                        <li class="active">
+                          <a href="#newtask" data-toggle="tab" data-target="#newtask">新任务</a>
+                        </li>
+                        <li>
+                          <a href="#selecttask" data-toggle="tab" data-target="#selecttask">现存任务</a>
+                        </li>
+                      </ul>
+		      <div class="tab-content">
+                        <div class="tab-pane active" id="newtask">
+                          <form>
+		            <fieldset>
+			      <label>标题</label>
+			      <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
+			      <label>内容</label>
+			      <textarea row="3" name="content" placeholder="任务内容"></textarea>
+		            </fieldset>
+		          </form>
+		        </div>
+
+                        <div class="tab-pane" id="selecttask">
+                          <form>
+                            <fieldset>
+                              <label>输入局部标题筛选以找到任务</label>
+                              <input type="text" class="span3" name="id" style="margin: 0 auto;" data-provide="typeahead" data-items="10" data-source="[]">
+                            </fieldset>
+                          </form>
+                        </div>
+                      </div>
+                  </div>                    
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <a href="#" class="btn cancel">取消</a>
                   <a href="#" class="btn btn-primary add">新增</a>
                 </div>
-              </div>
+              </script>
 
               <!-- template for a single todoview -->
               <script type="text/template" id="todolist-tpl">

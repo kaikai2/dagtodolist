@@ -30,12 +30,16 @@ define(function(require, exports, module) {
             this.templateObj = new jSmart(this.options.template);
             //this.$el.find("#maintab :first").tab("show");
             //this.$input = this.$("#newTask");
-            this.listenTo(this.model, 'change', this.render);
+            //this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'visible', this.toggleVisible);
             this.listenTo(this.model, 'complete:depends', this.checkDepends);
+            this.listenTo(this.model, 'change:depends', this.checkDepends);
+            this.listenTo(this.model, 'change:depends', this.checkReady);
+
             this.dependsCollection = this.collection.depends(this.model);
             this.listenTo(this.dependsCollection, 'complete:depends', this.checkReady);
+            this.render();
         },
         
         render: function(){
@@ -125,7 +129,7 @@ define(function(require, exports, module) {
         },
         newDepend: function(){
             var dlg = new NewTodoDialog({
-                el: $("#newtodo-dialog"),
+                template: $("#newtodo-dialog-tpl").text(),
                 dependents: this.model,
                 collection: this.collection,
             });
