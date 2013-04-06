@@ -24,162 +24,159 @@
     </div>
 
     <!-- main -->
-    <div class="row">
+    <div class="container">
+      <div class="row">
 
       <!-- side bar  -->
-      <div id="sideBar" class="span4 well">
-        
-        <ul class="nav nav-tabs nav-stacked" id="maintab">
-          <li class="active"><a href="#mylist" data-toggle="tab" data-target="#mylist">我的任务</a></li>
-          <li><a href="#taskflow" data-toggle="tab" data-target="#taskflow">任务流</a></li>
-          <li><a href="#alltask" data-toggle="tab" data-target="#alltask">所有任务</a></li>
-        </ul>
+      <div id="sideBar" class="span4">
+        <div class="well">
+          <ul class="nav nav-tabs nav-stacked" id="maintab">
+            <li class="active"><a href="#mylist" data-toggle="tab" data-target="#mylist">我的任务</a></li>
+            <li><a href="#taskflow" data-toggle="tab" data-target="#taskflow">任务流</a></li>
+            <li><a href="#alltask" data-toggle="tab" data-target="#alltask">所有任务</a></li>
+          </ul>
+        </div>
       </div>
 
       <!-- main frame -->
-      <div id="main" class="span8 well">
-        <div class="tab-content" id="maintabcontent">
+      <div id="main" class="span8">
+        <div class="well">
+          <div class="tab-content" id="maintabcontent">
 
 
-          <!-- mylist panel -->
-          <div class="tab-pane active" id="mylist">
-            <div class="input-prepend input-append">
-              <span class="add-on">新任务名称</span>
-              <input type="text" id="newTask" name="newTask" placeholder="新任务">
-              <a class="add-on btn newTask">新增任务</a>
-            </div>
-            <!-- dialog -->
-            <div class="modal hide fade" id="newtodo-dialog">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>新增前置任务</h3>
+            <!-- mylist panel -->
+            <div class="tab-pane active" id="mylist">
+              <div class="input-prepend input-append">
+                <span class="add-on">新任务名称</span>
+                <input type="text" id="newTask" name="newTask" placeholder="新任务">
+                <a class="add-on btn newTask">新增任务</a>
               </div>
-              <div class="modal-body">
-		<div class="row">
-		  <div class="span2">
-                    <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
+              <!-- dialog -->
+              <div class="modal hide fade" id="newtodo-dialog">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h3>新增前置任务</h3>
+                </div>
+                <div class="modal-body">
+		  <div class="row">
+		    <div class="span2">
+                      <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
+		    </div>
+		    <div class="span3">
+                      <form>
+		        <fieldset>
+			  <label>标题</label>
+			  <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
+			  <label>内容</label>
+			  <textarea row="3" name="content" placeholder="任务内容"></textarea>
+		        </fieldset>
+		      </form>
+		    </div>
 		  </div>
-		  <div class="span3">
-                    <form>
-		      <fieldset>
-			<label>标题</label>
-			<input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
-			<label>内容</label>
-			<textarea row="3" name="content" placeholder="任务内容"></textarea>
-		      </fieldset>
-		    </form>
-		  </div>
-		</div>
+                </div>
+                <div class="modal-footer">
+                  <a href="#" class="btn cancel">取消</a>
+                  <a href="#" class="btn btn-primary add">新增</a>
+                </div>
               </div>
-              <div class="modal-footer">
-                <a href="#" class="btn cancel">取消</a>
-                <a href="#" class="btn btn-primary add">新增</a>
-              </div>
+
+              <!-- template for a single todoview -->
+              <script type="text/template" id="todolist-tpl">
+                <div class="view form-inline">
+                  <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
+                  {if $model.done}
+                  <span class="label">完成</span>
+                  {elseif $model.ready}
+                  <span class="label label-success">就绪</span>
+                  {else}
+                  <span class="label label-warning">阻塞</span>
+                  {/if}
+                  <label class="name">{$model.name}</label>
+		  <button class="btn destroy pull-right">删除</button>
+                </div>
+                <input class="edit" value="{$model.name}">
+                <div class="detail">
+                  <div class="input">
+                    <textarea class="content">{$model.content}</textarea>
+                  </div>
+                  <div class="input-prepend">
+                    <span class="add-on">估计消耗时间</span>
+                    <input type="datetime" class="estimatedTimeInHours" value="{$model.estimatedTimeInHours}">
+                  </div>
+                  <div class="input-prepend">
+                    <span class="add-on">预计完成时间</span>
+                    <input type="datetime" class="estimatedEndTime" readonly value="{$model.estimatedEndTime}">
+                  </div>
+                  <div class="input-prepend">
+                    <span class="add-on">创建时间</span>
+                    <input type="datetime" class="createtime" readonly value="{$model.createTime}">
+                  </div>
+                  <div class="input-prepend">
+                    <span class="add-on">最后期限</span>
+                    <input type="datetime" class="deadline" value="{$model.deadlineTime}">
+                  </div>
+                  {if $model.done}
+                  <div class="input-prepend">
+                    <span class="add-on">完成时间</span>
+                    <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
+                  </div>
+                  {/if}
+                  <div class="">
+                    <label>前置任务</label>
+                    <ul class="todolist depends">
+                    </ul>
+                  </div>
+                  
+                  <button class="btn save">保存</button>
+                  <button class="btn depend">新前置任务</button>
+                </div>
+                <!--
+                    <div class="app-task">
+                      <input class="toggle" type="checkbox">
+                      <label>{$name}</label>
+                      <button class="btn">删除</button>
+                      <button class="btn">完成</button>
+                      <button class="btn">开始</button>
+                    </div>-->
+              </script>
+
+              <!-- template for depends in single todoview -->
+              <script type="text/template" id="dependslist-tpl">
+                <div cid="{$model._id}">
+                  {if $model.done}
+                  <span class="label">完成</span>
+                  {elseif $model.ready}
+                  <span class="label label-success">就绪</span>
+                  {else}
+                  <span class="label label-warning">阻塞</span>
+                  {/if}
+                  {$model.name}
+                  <button class="btn remove">解除依赖</button>
+                </div>
+              </script>
+
+
+              <ul id="todolist" class="todolist">
+              </ul>
             </div>
 
-            <!-- template for a single todoview -->
-            <script type="text/template" id="todolist-tpl">
-              <div class="view form-inline">
-                <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
-                <label class="name">{$model.name}</label>
-		<button class="btn destroy pull-right">删除</button>
-              </div>
-              <input class="edit" value="{$model.name}">
-              <div class="detail">
-                <div class="input-prepend input-append">
-                  <span class="add-on">状态</span>
-                  <span class="add-on">
-                    {if $model.done}
-                    <span class="label">完成</span>
-                    {elseif $model.ready}
-                    <span class="label label-success">就绪</span>
-                    {else}
-                    <span class="label label-warning">阻塞</span>
-                    {/if}
-                  </span>
-                </div>
-                <div class="input">
-                  <textarea class="content">{$model.content}</textarea>
-                </div>
-                <div class="input-prepend">
-                  <span class="add-on">创建时间</span>
-                  <input type="datetime" class="createtime" readonly value="{$model.createTime}">
-                </div>
-                <div class="input-prepend">
-                  <span class="add-on">最后期限</span>
-                  <input type="datetime" class="deadline" value="{$model.deadlineTime}">
-                </div>
-                {if $model.done}
-                <div class="input-prepend">
-                  <span class="add-on">完成时间</span>
-                  <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
-                </div>
-                {/if}
-                {if $model.depends|count == 0}
-                {else}
-                <div class="">
-                  <label>前置任务</label>
-                  <ul class="todolist depends">
-                    {foreach $model.depends as $i => $id}
-                    {$dependModel = $util->getmodel($id)}
-                    {if $dependModel}
-                    <li>
-                      <div cid="{$id}">
-                        <div class="input-prepend input-append">
-                          <span class="add-on">状态</span>
-                          <span class="add-on">
-                            {if $dependModel.done}
-                            <span class="label">完成</span>
-                            {elseif $dependModel.ready}
-                            <span class="label label-success">就绪</span>
-                            {else}
-                            <span class="label label-warning">阻塞</span>
-                            {/if}
-                          </span>
-                        </div>
-                        {$dependModel.name}
-                        <button class="btn remove">解除依赖</button>
-                      </div>
-                    </li>
-                    {/if}
-                    {/foreach}
-                  </ul>
-                </div>
-                {/if}
-                <button class="btn save">保存</button>
-                <button class="btn depend">新前置任务</button>
-              </div>
-              <!--
-                  <div class="app-task">
-                    <input class="toggle" type="checkbox">
-                    <label>{$name}</label>
-                    <button class="btn">删除</button>
-                    <button class="btn">完成</button>
-                    <button class="btn">开始</button>
-                  </div>-->
-            </script>
 
-            <!-- template for depends in single todoview -->
-            <script type="text/template" id="dependslist-tpl">
-            </script>
+            <!-- taskflow panel -->
+            <div class="tab-pane" id="taskflow">
+              <p>            task flow
+            </div>
 
 
-            <ul id="todolist" class="todolist">
-            </ul>
-          </div>
-
-
-          <!-- taskflow panel -->
-          <div class="tab-pane" id="taskflow">
-            <p>            task flow
-          </div>
-
-
-          <!-- alltask panel -->
-          <div class="tab-pane" id="alltask">
-            <p>         all task
+            <!-- alltask panel -->
+            <div class="tab-pane" id="alltask">
+              <p>         all task
+            </div>
           </div>
         </div>
+      </div>
+      <!-- end of main frame -->
+
+
       </div>
     </div>
   </body>

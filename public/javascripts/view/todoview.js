@@ -3,6 +3,8 @@ define(function(require, exports, module) {
     , $ = require('jquery')
     , bootstrap = require('bootstrap')
     , NewTodoDialog = require('view/newtododialog').NewTodoDialog
+    , ListView = require('view/listview').ListView
+    , DependsView = require('view/dependsview').DependsView
     , ENTER_KEY = 13
     , _ = require('underscore');
 
@@ -32,31 +34,44 @@ define(function(require, exports, module) {
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'visible', this.toggleVisible);
             this.listenTo(this.model, 'complete:depends', this.checkDepends);
+            this.dependsCollection = this.collection.depends(this.model);
+            this.listenTo(this.dependsCollection, 'complete:depends', this.checkReady);
         },
         
         render: function(){
             var self = this;
+            if (this.depends){
+                this.depends.remove();
+                this.depends = undefined;
+            }
+            this.checkReady();
             this.$el.html(
                 this.templateObj.fetch({
                     model: this.model.toJSON(),
-                    util: {
-                        getmodel: function(id){
-                            var model = self.collection.get(id);
-                            return model ? model.toJSON() : null;
-                        },
-                    },
-                }));
+                })
+            );
             this.$el.toggleClass('completed', this.model.get('done'));
             this.toggleVisible();
             this.$input = this.$('.edit');
+            this.depends = new ListView({
+                el: this.$(".depends"),
+                ItemView: DependsView,
+                itemTemplate: $("#dependslist-tpl").text(),
+                collection: this.dependsCollection,
+            });
             return this;
         },
 
         showDetail: function(){
             this.$el.toggleClass('detail');
         },
+        checkReady: function(){
+            this.model.set('ready', undefined == this.dependsCollection.findWhere({done: false}) ? true : false);
+        },
         checkDepends: function(){
-            this.render();
+            //this.render();
+            var models = this.collection.depends(this.model).models;
+            this.dependsCollection.set(models);
         },
         toggleVisible: function () {
             this.$el.toggleClass('hidden', this.isHidden());
@@ -65,15 +80,15 @@ define(function(require, exports, module) {
         isHidden: function () {
             var isCompleted = this.model.get('done');
             return false;/*(// hidden cases only
-               (!isCompleted && app.TodoFilter === 'completed') ||
-                    (isCompleted && app.TodoFilter === 'active')
-            );*/
+                           (!isCompleted && app.TodoFilter === 'completed') ||
+                           (isCompleted && app.TodoFilter === 'active')
+                           );*/
         },
 
         // Toggle the `"completed"` state of the model.
         toggleCompleted: function () {
             this.model.toggle();
-            this.collection.trigger('complete');
+            //this.collection.trigger('complete');
             return false;
         },
 

@@ -18,6 +18,7 @@ define(function(require, exports, module) {
             this.listenTo(this.collection, 'all', this.render);
             this.listenTo(this.collection, 'reset', this.addAll);
 //            this.templateObj = new jSmart(this.options.template);
+            this.addAll();
         },
         addOne: function(model){
             var view = new this.ItemView({
@@ -56,7 +57,7 @@ define(function(require, exports, module) {
         remove: function(){
             _.each(this.views, function(view){view.remove();});
             this.views.length = 0;
-            Backbone.View.remove.apply(this, arguments);
+            Backbone.View.prototype.remove.apply(this, arguments);
         }
     });
 });

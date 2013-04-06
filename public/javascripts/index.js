@@ -43,7 +43,7 @@ define(function(require, exports, module) {
     , config = require('app/config');
 
     var app = new App({
-        mytodolist: new Tasks({}),
+        mytodolist: new Tasks(),
     });
     var sidebar = new SideBarView({
         el: $("#sideBar"),
