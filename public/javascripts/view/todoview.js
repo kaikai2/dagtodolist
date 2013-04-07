@@ -36,7 +36,7 @@ define(function(require, exports, module) {
             this.listenTo(this.model, 'complete:depends', this.checkDepends);
             this.listenTo(this.model, 'change:depends', this.checkDepends);
             this.listenTo(this.model, 'change:depends', this.checkReady);
-            //this.listenTo(this.model, 'change:done', this.checkDone);
+            this.listenTo(this.model, 'change:done', this.checkDone);
 	    this.listenTo(this.model, 'change:ready', this.updateReady);
 
             this.dependsCollection = this.collection.depends(this.model);
@@ -73,6 +73,11 @@ define(function(require, exports, module) {
         },
         checkReady: function(){
             this.model.set('ready', undefined == this.dependsCollection.findWhere({done: false}) ? true : false);
+            if (this.model.get('ready')){
+                this.$(".view .state").addClass("ready");
+            }else{
+                this.$(".view .state").removeClass("ready");
+            }
         },
 	updateReady: function(){
 		this.$el
@@ -100,10 +105,15 @@ define(function(require, exports, module) {
             //this.collection.trigger('complete');
 	    e.stopPropagation();
         },
-	/*	checkDone: function() {
-		this.$(".toggle").prop("checked", this.model.get('done'));
-	    },
-	*/
+	checkDone: function() {
+	    //this.$(".toggle").prop("checked", this.model.get('done'));
+            if (this.model.get('done')){
+                this.$(".view .state").addClass("done");
+            }else{
+                this.$(".view .state").removeClass("done");
+            }
+	},
+	
         // Switch this view into `"editing"` mode, displaying the input field.
         edit: function () {
             this.$el.addClass('editing');

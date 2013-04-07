@@ -112,14 +112,10 @@
               <script type="text/template" id="todolist-tpl">
                 <div class="view form-inline">
                   <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
-		  <span class="state {if $model.done}">
-                  
-                  <span class="label">完成</span>
-                  {elseif $model.ready}
-                  <span class="label label-success">就绪</span>
-                  {else}
-                  <span class="label label-warning">阻塞</span>
-                  {/if}
+		  <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
+                    <span class="label done">完成</span>
+                    <span class="label label-success no-done ready">就绪</span>
+                    <span class="label label-warning no-done no-ready">阻塞</span>
 		  </span>
                   <label class="name">{$model.name}</label>
 		  <button class="btn destroy pull-right">删除</button>
@@ -173,13 +169,11 @@
               <!-- template for depends in single todoview -->
               <script type="text/template" id="dependslist-tpl">
                 <div cid="{$model._id}">
-                  {if $model.done}
-                  <span class="label">完成</span>
-                  {elseif $model.ready}
-                  <span class="label label-success">就绪</span>
-                  {else}
-                  <span class="label label-warning">阻塞</span>
-                  {/if}
+		  <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
+                    <span class="label done">完成</span>
+                    <span class="label label-success no-done ready">就绪</span>
+                    <span class="label label-warning no-done no-ready">阻塞</span>
+		  </span>
                   {$model.name}
                   <button class="btn remove">解除依赖</button>
                 </div>

@@ -31,6 +31,10 @@ a {
 }
 .todolist li:not(.editing) .edit,
 .todolist li:not(.detail) .detail,
+.todolist .state.done > .no-done,
+.todolist .state:not(.done) > .done,
+.todolist .state.ready > .no-ready,
+.todolist .state:not(.ready) > .ready,
 .todolist li.editing .view {
     display: none; 
 }

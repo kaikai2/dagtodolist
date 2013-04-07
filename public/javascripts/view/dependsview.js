@@ -14,12 +14,25 @@ define(function(require, exports, module) {
         },
         initialize: function(){
             this.templateObj = new jSmart(this.options.template);
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'change:name', this.render);
+            this.listenTo(this.model, 'change:done change:ready', this.updateState);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'change:done', this.informDone);
         },
         informDone: function(){
             this.collection.trigger('complete:depends');
+        },
+        updateState: function(){
+            if (this.model.get('ready')){
+                this.$(".state").addClass("ready");
+            }else{
+                this.$(".state").removeClass("ready");
+            }
+            if (this.model.get('done')){
+                this.$(".state").addClass("done");
+            }else{
+                this.$(".state").removeClass("done");
+            }
         },
         render: function(){
             this.$el.html(
