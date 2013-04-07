@@ -36,6 +36,8 @@ define(function(require, exports, module) {
             this.listenTo(this.model, 'complete:depends', this.checkDepends);
             this.listenTo(this.model, 'change:depends', this.checkDepends);
             this.listenTo(this.model, 'change:depends', this.checkReady);
+            //this.listenTo(this.model, 'change:done', this.checkDone);
+	    this.listenTo(this.model, 'change:ready', this.updateReady);
 
             this.dependsCollection = this.collection.depends(this.model);
             this.listenTo(this.dependsCollection, 'complete:depends', this.checkReady);
@@ -72,6 +74,9 @@ define(function(require, exports, module) {
         checkReady: function(){
             this.model.set('ready', undefined == this.dependsCollection.findWhere({done: false}) ? true : false);
         },
+	updateReady: function(){
+		this.$el
+	    },
         checkDepends: function(){
             //this.render();
             var models = this.collection.depends(this.model).models;
@@ -90,12 +95,15 @@ define(function(require, exports, module) {
         },
 
         // Toggle the `"completed"` state of the model.
-        toggleCompleted: function () {
+        toggleCompleted: function (e) {
             this.model.toggle();
             //this.collection.trigger('complete');
-            return false;
+	    e.stopPropagation();
         },
-
+	/*	checkDone: function() {
+		this.$(".toggle").prop("checked", this.model.get('done'));
+	    },
+	*/
         // Switch this view into `"editing"` mode, displaying the input field.
         edit: function () {
             this.$el.addClass('editing');

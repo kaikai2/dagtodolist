@@ -112,13 +112,15 @@
               <script type="text/template" id="todolist-tpl">
                 <div class="view form-inline">
                   <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
-                  {if $model.done}
+		  <span class="state {if $model.done}">
+                  
                   <span class="label">完成</span>
                   {elseif $model.ready}
                   <span class="label label-success">就绪</span>
                   {else}
                   <span class="label label-warning">阻塞</span>
                   {/if}
+		  </span>
                   <label class="name">{$model.name}</label>
 		  <button class="btn destroy pull-right">删除</button>
                 </div>
