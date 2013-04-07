@@ -17,13 +17,15 @@ a {
 .todolist{
     list-style: none;
 }
-.todolist li .toggle {
+
+/*.todolist li .toggle {
     position: absolute;
 }
 
 .todolist li label {
     padding-left: 30px;
-}
+}*/
+
 .todolist li .view {
     position: relative;
     padding: 10px;
