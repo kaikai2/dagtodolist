@@ -11,6 +11,7 @@ define(function(require, exports, module) {
         model: null,
         
         events:{
+            "click .remove": "removeDepends",
         },
         initialize: function(){
             this.templateObj = new jSmart(this.options.template);
@@ -40,6 +41,11 @@ define(function(require, exports, module) {
                     model: this.model.toJSON()
                 }));
             return this;
+        },
+
+        // event handler
+        removeDepends: function(){
+            this.collection.remove(this.model);
         },
     });
 });

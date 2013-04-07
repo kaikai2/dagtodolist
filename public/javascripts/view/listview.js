@@ -14,7 +14,7 @@ define(function(require, exports, module) {
             this.ItemView = this.options.ItemView;
             this.listenTo(this.collection, 'change', this.filterOne);
             this.listenTo(this.collection, 'add', this.addOne);
-//            this.listenTo(this.collection, 'remove', this.onRemove);
+            this.listenTo(this.collection, 'remove', this.onRemove);
             this.listenTo(this.collection, 'all', this.render);
             this.listenTo(this.collection, 'reset', this.addAll);
 //            this.templateObj = new jSmart(this.options.template);
@@ -48,6 +48,16 @@ define(function(require, exports, module) {
                 self.onAdd(item);
             });*/
             //this.$el.children('ul').listview('refresh');
+        },
+        onRemove: function(){
+            var collection = this.collection;
+            this.views = _.filter(this.views, function(view){
+                if (!collection.get(view.model.id)){
+                    view.remove();
+                    return false;
+                }
+                return true;
+            });
         },
         fire: function(eventName){
             this.collection.each(function(model){

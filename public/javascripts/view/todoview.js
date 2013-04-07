@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 	    this.listenTo(this.model, 'change:ready', this.updateReady);
 
             this.dependsCollection = this.collection.depends(this.model);
-            this.listenTo(this.dependsCollection, 'complete:depends', this.checkReady);
+            this.listenTo(this.dependsCollection, 'complete:depends remove add', this.checkReady);
             this.render();
         },
         
