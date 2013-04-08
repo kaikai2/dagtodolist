@@ -44,7 +44,11 @@ define(function(require, exports, module) {
                             heteronym: true, // 开启多音字模式
                             style: pinyin.STYLE_INITIALS,
                         });
-                        var candidates = _.union(full[0], initial[0]);
+                        var first = pinyin(c, {
+                            heteronym: true, // 开启多音字模式
+                            style: pinyin.STYLE_FIRST_LETTER,
+                        });
+                        var candidates = _.union(full[0], initial[0], first[0], [c]);
                         return candidates;
                     });
                     var allReduced = _.reduce(all, function(all, candidates){
