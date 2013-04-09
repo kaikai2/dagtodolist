@@ -139,7 +139,9 @@ define(function(require, exports, module) {
             var value = {
                 deadlineTime: this.$(".deadline").val(),
                 content: this.$(".content").val(),
-                depends: this.$(".depends").val(),
+                depends: _.map(this.$(".depends > li > div"), function(a){
+			return $(a).attr('cid');
+		    }),
                 estimatedTimeInHours: this.$(".estimatedTimeInHours").val(),
             };
             
