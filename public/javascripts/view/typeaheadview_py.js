@@ -32,7 +32,7 @@ define(function(require, exports, module) {
                         });
                         var candidates = _.union(full[0], initial[0], first[0], [c]);
                         return candidates;
-                    });
+			});
                     var allReduced = _.reduce(all, function(all, candidates){
                         if (candidates.length == 1){
                             all.last = all.last + candidates[0];
@@ -70,6 +70,9 @@ define(function(require, exports, module) {
         },
         render: function(){
         },
-
+	remove: function(){
+		this.$el.data('typeahead').$menu.remove();
+		Backbone.View.prototype.remove.apply(this, arguments);
+	    }
     });
 });

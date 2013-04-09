@@ -17,6 +17,7 @@ define(function(require, exports, module) {
         events:{
             "click .cancel": "cancel",
             "click .add": "add",
+	    "hidden": "remove",
         },
         initialize: function(){
             this.$el.html(this.options.template);
@@ -50,8 +51,8 @@ define(function(require, exports, module) {
                     success: function(model, response, options){
                         self._addDepends(self.model.id);
                         self.collection.add(self.model);
-
-                        self.remove();
+			self.model = undefined;
+                        self.$el.modal('hide');
                     },
                     error: function(model, xhr, options){
                     }
@@ -62,7 +63,7 @@ define(function(require, exports, module) {
                     var model = this.collection.at(selIndex);
                     if (model){
                         this._addDepends(model.id);
-                        this.remove();
+                        this.$el.modal('hide');
                     }
                 }
             }
@@ -74,13 +75,12 @@ define(function(require, exports, module) {
             this.dependents.save();
         },
         cancel: function(){
+	    if (this.model){
+		this.model.destroy();
+	    }
             this.$el.modal('hide');
-            this.model.destroy();
-            this.dependents = null;
-            this.remove();
         },
         remove: function(){
-	    this.$el.modal('hide');
             this.model = undefined;
             this.dependents = undefined;
             if (this.findDependsView){
