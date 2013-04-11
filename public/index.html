@@ -52,10 +52,19 @@
 
             <!-- mylist panel -->
             <div class="tab-pane active" id="mylist">
-              <div class="input-prepend input-append">
-                <span class="add-on">新任务名称</span>
-                <input type="text" id="newTask" name="newTask" placeholder="新任务">
-                <a class="add-on btn newTask">新增任务</a>
+              <div class="btn-toolbar">
+                <div class="input-prepend input-append btn-group">
+                  <span class="add-on">新任务名称</span>
+                  <input type="text" id="newTask" name="newTask" placeholder="新任务">
+                  <a class="add-on btn newTask">新增任务</a>
+                </div>
+
+                <div class="filter btn-group" data-toggle="buttons-checkbox">
+                  <button class="btn"><span class="label">全部</span></button>
+                  <button class="btn"><span class="label label-success">就绪</span></button>
+                  <button class="btn"><span class="label label-warning">阻塞</span></button>
+                  <button class="btn"><span class="label">完成</span></button>
+                </div>
               </div>
               <!-- dialog -->
               <script type="text/template" id="newtodo-dialog-tpl"> 
@@ -64,12 +73,12 @@
                   <h3>新增前置任务</h3>
                 </div>
                 <div class="modal-body">
-		  <div class="row">
-		    <div class="span2">
+		  <div class="row-fluid">
+		    <div class="span4">
                       <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
 		    </div>
 
-                    <div class="span4">
+                    <div class="span8">
                       <ul class="nav nav-tabs">
                         <li class="active">
                           <a href="#newtask" data-toggle="tab" data-target="#newtask">新任务</a>
@@ -93,8 +102,8 @@
                         <div class="tab-pane" id="selecttask">
                           <form>
                             <fieldset>
-                              <label>输入局部标题筛选以找到任务</label>
-                              <input type="text" class="span3" name="id" style="margin: 0 auto;" data-provide="typeahead" data-items="10" data-source="[]">
+                              <label>输入标题关键字可筛选任务</label>
+                              <input type="text" class="" placeholder="支持拼音缩写" name="id" style="margin: 0 auto;" data-provide="typeahead" data-items="10" data-source="[]">
                             </fieldset>
                           </form>
                         </div>
