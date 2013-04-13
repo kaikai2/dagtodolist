@@ -58,12 +58,15 @@
                   <input type="text" id="newTask" name="newTask" placeholder="新任务">
                   <a class="add-on btn newTask">新增任务</a>
                 </div>
-
-                <div class="filter btn-group" data-toggle="buttons-checkbox">
-                  <button class="btn"><span class="label">全部</span></button>
-                  <button class="btn"><span class="label label-success">就绪</span></button>
-                  <button class="btn"><span class="label label-warning">阻塞</span></button>
-                  <button class="btn"><span class="label">完成</span></button>
+                <div class="filter btn-toolbar">
+                  <div class="btn-group" data-toggle="buttons-checkbox">
+                    <button class="btn all"><span class="label">全部</span></button>
+                  </div>
+                  <div class="btn-group" data-toggle="buttons-checkbox">
+                    <button class="btn ready"><span class="label label-success">就绪</span></button>
+                    <button class="btn no-ready"><span class="label label-warning">阻塞</span></button>
+                    <button class="btn done"><span class="label">完成</span></button>
+                  </div>
                 </div>
               </div>
               <!-- dialog -->
