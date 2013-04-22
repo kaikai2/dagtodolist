@@ -7,6 +7,34 @@ define(function(require, exports, module) {
     , ListView = require('view/listview').ListView
     , TodoView = require('view/todoview').TodoView;
 
+    var Button = Backbone.Model.extend({
+        defaults:{
+            name: null,
+            selected: false,
+        }
+    });
+    var Buttons = Backbone.Collection.extend({
+        model: Button,
+    });
+    var ButtonView = Backbone.View.extend({
+        events:{
+            "click": "toggle",
+        },
+        initialize: function(){
+            this.listenTo(this.model, "change:selected", this.changeSelected);
+            this.changeSelected();
+        },
+        toggle: function(){
+            this.model.set('selected', !this.model.get('selected'));
+        },
+        changeSelected: function(){
+            if (this.model.get('selected')){
+                this.$el.addClass("active");
+            }else{
+                this.$el.removeClass("active");
+            }
+        }
+    });
     exports.MyTodoListView = Backbone.View.extend({
         el: null,
         model: null,
@@ -16,7 +44,6 @@ define(function(require, exports, module) {
             "click .newTask": "onNewTask",
             "keypress #newTask": "newOnEnter",
             "click .filter .btn.all": "onFilterAll",
-            "click .filter .btn:not(.all)": "onFilter",
             //"click #maintab a": "onTab",
         },
         initialize: function(){
@@ -33,11 +60,37 @@ define(function(require, exports, module) {
 //                reset:true,
                 add:true,
             });
+            this.$buttons = [];
+            this.buttons = new Buttons();
+            this.buttons.add([
+                {name: '就绪'},
+                {name: '阻塞'},
+                {name: '完成'},
+            ]);
+            var self = this;
+            var buttons = this.$(".filter .btn:not(.all)");
+            this.buttons.each(function(btn, index){
+                if (index < buttons.length){
+                    self.$buttons.push(new ButtonView({
+                        el: buttons[index],
+                        model: btn,
+                    }));
+                }
+            });
+            this.listenTo(this.buttons, "change", this.updateFilter);
         },
         
         render: function(){
         },
-
+        updateFilter: function(){
+            if (this.buttons.any(function(btn){
+                return !btn.get('selected');
+            })){
+                this.$(".filter .all").removeClass("active");
+            }else{
+                this.$(".filter .all").addClass("active");
+            }
+        },
         // events
         onNewTask: function(){
             var name = this.$input.val().trim();
@@ -58,26 +111,27 @@ define(function(require, exports, module) {
             this.onNewTask();
         },
         onFilterAll: function(){
-            var otherBtns = this.$(".filter .btn:not(.all)");
-            if (this.$(".filter .btn.all").hasClass('active')){
-                otherBtns.filter(".active").button('toggle');
-            }else{
-                otherBtns.filter(":not(.active)").button('toggle');
-            }
-        },
-        onFilter: function(e){
-            var allBtn = this.$(".filter .btn.all");
-            var otherBtns = this.$(".filter .btn:not(.all)");
-            var activeOtherBtns = otherBtns.filter(".active");
-            if (activeOtherBtns.length == otherBtns.length){
-                allBtn.filter(".active").button('toggle');
-            }else if (activeOtherBtns.length == 0){
-                allBtn.filter(":not(.active)").button('toggle');
-            }
+            var value = !this.$(".filter .all").hasClass("active");
+            this.buttons.each(function(btn,index){
+                btn.set('selected', value);
+            });
         },
         onTab: function(e){
             e.preventDefault();
             $(e.target).tab('show');
+        },
+
+
+        remove: function(){
+            this.model = undefined;
+            _.each(this.$buttons, function(btn, index){
+                btn.remove();
+            });
+            this.$buttons = undefined;
+            this.buttons.reset();
+            this.buttons = undefined;
+            
+            Backbone.View.prototype.remove.apply(this, arguments);
         },
     });
 });
