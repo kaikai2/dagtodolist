@@ -11,7 +11,10 @@ define(function(require, exports, module) {
         defaults:{
             name: null,
             selected: false,
-        }
+            filte: function(task){
+                return true;
+            }
+        },
     });
     var Buttons = Backbone.Collection.extend({
         model: Button,
@@ -49,24 +52,45 @@ define(function(require, exports, module) {
         initialize: function(){
             //this.templateObj = new jSmart(this.options.template);
             //this.$el.find("#maintab :first").tab("show");
+            this.$buttons = [];
+            this.buttons = new Buttons();
+            this.buttons.add([
+                {
+                    name: '就绪',
+                    filte: function(task){
+                        return !task.get('done') && task.get('ready');
+                    },
+                    selected: true,
+                },
+                {
+                    name: '阻塞',
+                    filte: function(task){
+                        return !task.get('done') && !task.get('ready');
+                    },
+                    selected: true,
+                },
+                {
+                    name: '完成',
+                    filte: function(task){
+                        return task.get('done');
+                    },
+                    selected: true,
+                },
+            ]);
             this.$input = this.$("#newTask");
             this.list = new ListView({
                 el: this.$("#todolist"),
                 ItemView: TodoView,
-                itemTemplate: this.$("#todolist-tpl").text(),
                 collection: this.collection,
+                options:{
+                    filter: this.buttons,
+                    template: this.$("#todolist-tpl").text(),
+                }
             });
             this.collection.fetch({
 //                reset:true,
                 add:true,
             });
-            this.$buttons = [];
-            this.buttons = new Buttons();
-            this.buttons.add([
-                {name: '就绪'},
-                {name: '阻塞'},
-                {name: '完成'},
-            ]);
             var self = this;
             var buttons = this.$(".filter .btn:not(.all)");
             this.buttons.each(function(btn, index){
@@ -78,18 +102,15 @@ define(function(require, exports, module) {
                 }
             });
             this.listenTo(this.buttons, "change", this.updateFilter);
+            this.updateFilter();
         },
         
         render: function(){
         },
         updateFilter: function(){
-            if (this.buttons.any(function(btn){
-                return !btn.get('selected');
-            })){
-                this.$(".filter .all").removeClass("active");
-            }else{
-                this.$(".filter .all").addClass("active");
-            }
+            this.$(".filter .all").toggleClass("active", this.buttons.all(function(btn){
+                return btn.get('selected');
+            }));
         },
         // events
         onNewTask: function(){

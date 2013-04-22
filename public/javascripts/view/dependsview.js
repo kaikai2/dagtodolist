@@ -14,7 +14,7 @@ define(function(require, exports, module) {
             "click .remove": "removeDepends",
         },
         initialize: function(){
-            this.templateObj = new jSmart(this.options.template);
+            this.templateObj = new jSmart(this.options.listoptions.template);
             this.listenTo(this.model, 'change:name', this.render);
             this.listenTo(this.model, 'change:done change:ready', this.updateState);
             this.listenTo(this.model, 'destroy', this.remove);

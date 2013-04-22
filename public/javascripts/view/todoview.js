@@ -27,7 +27,9 @@ define(function(require, exports, module) {
             //"click #maintab a": "onTab",
         },
         initialize: function(){
-            this.templateObj = new jSmart(this.options.template);
+            this.listoptions = this.options.listoptions;
+            this.filter = this.listoptions.filter;
+            this.templateObj = new jSmart(this.listoptions.template);
             //this.$el.find("#maintab :first").tab("show");
             //this.$input = this.$("#newTask");
             //this.listenTo(this.model, 'change', this.render);
@@ -41,6 +43,7 @@ define(function(require, exports, module) {
 
             this.dependsCollection = this.collection.depends(this.model);
             this.listenTo(this.dependsCollection, 'complete:depends remove add', this.checkReady);
+            this.listenTo(this.filter, "change", this.toggleVisible);
             this.render();
         },
         
@@ -62,8 +65,10 @@ define(function(require, exports, module) {
             this.depends = new ListView({
                 el: this.$(".depends"),
                 ItemView: DependsView,
-                itemTemplate: $("#dependslist-tpl").text(),
                 collection: this.dependsCollection,
+                options: {
+                    template: $("#dependslist-tpl").text(),
+                },
             });
             return this;
         },
@@ -80,8 +85,8 @@ define(function(require, exports, module) {
             }
         },
 	updateReady: function(){
-		this.$el
-	    },
+	    this.$el
+	},
         checkDepends: function(){
             //this.render();
             var models = this.collection.depends(this.model).models;
@@ -92,11 +97,11 @@ define(function(require, exports, module) {
         },
 
         isHidden: function () {
-            var isCompleted = this.model.get('done');
-            return false;/*(// hidden cases only
-                           (!isCompleted && app.TodoFilter === 'completed') ||
-                           (isCompleted && app.TodoFilter === 'active')
-                           );*/
+            var model = this.model;
+            return !_.any(this.filter.where({selected: true}), function(filter){
+                var filte = filter.get('filte');
+                return filte.call(filter, model);
+            });
         },
 
         // Toggle the `"completed"` state of the model.

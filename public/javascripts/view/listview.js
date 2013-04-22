@@ -25,13 +25,13 @@ define(function(require, exports, module) {
                 model: model,
                 template: this.options.itemTemplate,
                 collection: this.collection,
+                listoptions: this.options.options,
             });
             this.$el.append(view.render().el);
             this.views.push(view);
         },
         addAll: function(){
-            _.each(this.views, function(view){view.remove();});
-            this.views.length = 0;
+            this._removeViews();
             this.$el.html('');
             this.collection.each(this.addOne, this);
         },
@@ -64,9 +64,12 @@ define(function(require, exports, module) {
                 model.trigger(eventName);
             }, this);
         },
-        remove: function(){
+        _removeViews: function(){
             _.each(this.views, function(view){view.remove();});
             this.views.length = 0;
+        },
+        remove: function(){
+            this._removeViews();
             Backbone.View.prototype.remove.apply(this, arguments);
         }
     });
