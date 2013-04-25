@@ -6,6 +6,27 @@ define(function(require, exports, module) {
     , _ = require('underscore')
     , pinyin = require('pinyin');
 
+    function match(candidateList, queryString){
+        /* '大哥去tmd干活'
+        var candidateList = [
+            ['大','da','d'],
+            ['哥','ge','g'],
+            ['去','qu','q'],
+            ['tmd'],
+            ['干','gan','g'],
+            ['活','huo','h'],
+         ];
+        queryString = 'qug活';
+        */
+        var res = [];
+        for (var i = 0; i < candidateList.length; i++){
+            var s = candidateList[i].join('|');
+            res.push(s);
+        }
+        var s = '^(' + res.join(')?(') + ')$';
+        var re = new RegExp(s, 'i');
+        return re.test(queryString);//.match(re);
+    }
     exports.TypeAheadView_Pinyin = Backbone.View.extend({
         el: null,
         events:{
@@ -32,35 +53,9 @@ define(function(require, exports, module) {
                         });
                         var candidates = _.union(full[0], initial[0], first[0], [c]);
                         return candidates;
-			});
-                    var allReduced = _.reduce(all, function(all, candidates){
-                        if (candidates.length == 1){
-                            all.last = all.last + candidates[0];
-                        }else{
-                            if (all.last.length){
-                                all.result.push([all.last]);
-                                all.last = '';
-                            }
-                            all.result.push(candidates);
-                        }
-                        return all;
-                    }, {result:[], last:''});
-                    if (allReduced.last.length){
-                        allReduced.result.push([allReduced.last]);
-                    }
-                    var allCandidates = _.reduce(allReduced.result, function(all, candidates){
-                        var r = [];
-                        _.each(candidates, function(c){
-                            r = _.union(r, _.map(all, function(s){
-                                return s+c;
-                            }));
-                        });
-                        return r;
-                    }, ['']);
-                    return _.any(allCandidates, function(c){
-                        return c.search(query) != -1;
                     });
-                    return false;
+
+                    return match(all, query);
                 },
             });
         },
@@ -70,9 +65,9 @@ define(function(require, exports, module) {
         },
         render: function(){
         },
-	remove: function(){
-		this.$el.data('typeahead').$menu.remove();
-		Backbone.View.prototype.remove.apply(this, arguments);
-	    }
+        remove: function(){
+            this.$el.data('typeahead').$menu.remove();
+            Backbone.View.prototype.remove.apply(this, arguments);
+        }
     });
 });
