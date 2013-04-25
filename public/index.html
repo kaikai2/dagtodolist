@@ -67,6 +67,12 @@
                     <button class="btn no-ready"><span class="label label-warning">阻塞</span></button>
                     <button class="btn done"><span class="label">完成</span></button>
                   </div>
+                  <div class="append">
+                    <input type="text" class="" placeholder="筛选，支持拼音缩写" name="id" style="margin: 0 auto;" >
+                    <span class="add-on">
+                      <button class="btn clear"><span class="label">取消筛选</span></button>
+                    </span>
+                  </div>
                 </div>
               </div>
               <!-- dialog -->
@@ -76,10 +82,10 @@
                   <h3>新增前置任务</h3>
                 </div>
                 <div class="modal-body">
-		  <div class="row-fluid">
-		    <div class="span4">
+                  <div class="row-fluid">
+                    <div class="span4">
                       <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
-		    </div>
+                    </div>
 
                     <div class="span8">
                       <ul class="nav nav-tabs">
@@ -90,17 +96,17 @@
                           <a href="#selecttask" data-toggle="tab" data-target="#selecttask">现存任务</a>
                         </li>
                       </ul>
-		      <div class="tab-content">
+                      <div class="tab-content">
                         <div class="tab-pane active" id="newtask">
                           <form>
-		            <fieldset>
-			      <label>标题</label>
-			      <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
-			      <label>内容</label>
-			      <textarea row="3" name="content" placeholder="任务内容"></textarea>
-		            </fieldset>
-		          </form>
-		        </div>
+                            <fieldset>
+                              <label>标题</label>
+                              <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
+                              <label>内容</label>
+                              <textarea row="3" name="content" placeholder="任务内容"></textarea>
+                            </fieldset>
+                          </form>
+                        </div>
 
                         <div class="tab-pane" id="selecttask">
                           <form>
@@ -124,68 +130,68 @@
               <script type="text/template" id="todolist-tpl">
                 <div class="view form-inline">
                   <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
-		  <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
-                    <span class="label done">完成</span>
-                    <span class="label label-success no-done ready">就绪</span>
-                    <span class="label label-warning no-done no-ready">阻塞</span>
-		  </span>
-                  <label class="name">{$model.name}</label>
-		  <button class="btn destroy pull-right btn-danger btn-small">删除</button>
-                </div>
-                <input class="edit" value="{$model.name}">
-                <div class="detail">
-                  <div class="input">
-                    <textarea class="content">{$model.content}</textarea>
+                    <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
+                      <span class="label done">完成</span>
+                      <span class="label label-success no-done ready">就绪</span>
+                      <span class="label label-warning no-done no-ready">阻塞</span>
+                    </span>
+                    <label class="name">{$model.name}</label>
+                    <button class="btn destroy pull-right btn-danger btn-small">删除</button>
                   </div>
-                  <div class="input-prepend">
-                    <span class="add-on">估计消耗时间</span>
-                    <input type="datetime" class="estimatedTimeInHours" value="{$model.estimatedTimeInHours}">
+                  <input class="edit" value="{$model.name}">
+                  <div class="detail">
+                    <div class="input">
+                      <textarea class="content">{$model.content}</textarea>
+                    </div>
+                    <div class="input-prepend">
+                      <span class="add-on">估计消耗时间</span>
+                      <input type="datetime" class="estimatedTimeInHours"   value="{$model.estimatedTimeInHours}">
+                    </div>
+                    <div class="input-prepend">
+                      <span class="add-on">预计完成时间</span>
+                      <input type="datetime" class="estimatedEndTime" readonly value="{$model.estimatedEndTime}">
+                    </div>
+                    <div class="input-prepend">
+                      <span class="add-on">创建时间</span>
+                      <input type="datetime" class="createtime" readonly value="{$model.createTime}">
+                    </div>
+                    <div class="input-prepend">
+                      <span class="add-on">最后期限</span>
+                      <input type="datetime" class="deadline" value="{$model.deadlineTime}">
+                    </div>
+                    {if $model.done}
+                    <div class="input-prepend">
+                      <span class="add-on">完成时间</span>
+                      <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
+                    </div>
+                    {/if}
+                    <div class="">
+                      <label>前置任务</label>
+                      <ul class="todolist depends">
+                      </ul>
+                    </div>
+                    
+                    <button class="btn save">保存</button>
+                    <button class="btn depend">新前置任务</button>
                   </div>
-                  <div class="input-prepend">
-                    <span class="add-on">预计完成时间</span>
-                    <input type="datetime" class="estimatedEndTime" readonly value="{$model.estimatedEndTime}">
-                  </div>
-                  <div class="input-prepend">
-                    <span class="add-on">创建时间</span>
-                    <input type="datetime" class="createtime" readonly value="{$model.createTime}">
-                  </div>
-                  <div class="input-prepend">
-                    <span class="add-on">最后期限</span>
-                    <input type="datetime" class="deadline" value="{$model.deadlineTime}">
-                  </div>
-                  {if $model.done}
-                  <div class="input-prepend">
-                    <span class="add-on">完成时间</span>
-                    <input type="datetime" class="closetime" readonly value="{$model.closeTime}">
-                  </div>
-                  {/if}
-                  <div class="">
-                    <label>前置任务</label>
-                    <ul class="todolist depends">
-                    </ul>
-                  </div>
-                  
-                  <button class="btn save">保存</button>
-                  <button class="btn depend">新前置任务</button>
-                </div>
-                <!--
-                    <div class="app-task">
-                      <input class="toggle" type="checkbox">
-                      <label>{$name}</label>
-                      <button class="btn">删除</button>
-                      <button class="btn">完成</button>
-                      <button class="btn">开始</button>
-                    </div>-->
+                  <!--
+                      <div class="app-task">
+                        <input class="toggle" type="checkbox">
+                        <label>{$name}</label>
+                        <button class="btn">删除</button>
+                        <button class="btn">完成</button>
+                        <button class="btn">开始</button>
+                      </div>-->
               </script>
 
               <!-- template for depends in single todoview -->
               <script type="text/template" id="dependslist-tpl">
                 <div cid="{$model._id}">
-		  <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
+                  <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
                     <span class="label done">完成</span>
                     <span class="label label-success no-done ready">就绪</span>
                     <span class="label label-warning no-done no-ready">阻塞</span>
-		  </span>
+                  </span>
                   {$model.name}
                   <button class="btn btn-mini btn-warning remove">解除依赖</button>
                 </div>
