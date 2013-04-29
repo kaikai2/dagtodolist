@@ -23,7 +23,7 @@ define(function(require, exports, module) {
         addOne: function(model){
             var view = new this.ItemView({
                 model: model,
-                template: this.options.itemTemplate,
+                //template: this.options.options.template,
                 collection: this.collection,
                 listoptions: this.options.options,
             });

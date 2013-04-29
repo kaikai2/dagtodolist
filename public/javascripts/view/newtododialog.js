@@ -13,7 +13,6 @@ define(function(require, exports, module) {
         el: null,
         model: null,
         collection: null,
-        templateObj: null,
         events:{
             "click .cancel": "cancel",
             "click .add": "add",
@@ -22,8 +21,6 @@ define(function(require, exports, module) {
         initialize: function(){
             this.$el.html(this.options.template);
             this.$el.addClass("modal hide fade");
-            this.model = new Task;
-            this.dependents = this.options.dependents;
             this.$el.modal();
             var unDoneTasks = this.collection.where({done: false});
             var names = _.map(unDoneTasks, function(model){
@@ -41,20 +38,18 @@ define(function(require, exports, module) {
 
 	// events
         add: function(){
-            var self = this;
             var curId = this.$(".tab-pane.active").attr('id');
             if (curId == "newtask"){
-                this.model.save({
+                var model = new Task;
+                var self = this;
+                model.save({
                     name: this.$("[name=name]").val(),
                     content: this.$("[name=content]").val(),
                 }, {
-                    success: function(model, response, options){
-                        self._addDepends(self.model.id);
-                        self.collection.add(self.model);
-			self.model = undefined;
+                    success: function(){
+                        self.collection.add(model);
+                        self._addDepends(model.id);
                         self.$el.modal('hide');
-                    },
-                    error: function(model, xhr, options){
                     }
                 });
             }else if (curId == "selecttask"){
@@ -69,20 +64,16 @@ define(function(require, exports, module) {
             }
         },
         _addDepends: function(id){
-            var depends = (this.dependents.get("depends") || []).slice();
+            var depends = (this.model.get("depends") || []).slice();
             depends.push(id);
-            this.dependents.set("depends", depends);
-            this.dependents.save();
+            this.model.set("depends", depends);
+            this.model.save();
         },
         cancel: function(){
-	    if (this.model){
-		this.model.destroy();
-	    }
             this.$el.modal('hide');
         },
         remove: function(){
             this.model = undefined;
-            this.dependents = undefined;
             if (this.findDependsView){
                 this.findDependsView.remove();
                 this.findDependsView = undefined;

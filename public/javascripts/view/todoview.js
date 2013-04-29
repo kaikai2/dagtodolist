@@ -155,7 +155,7 @@ define(function(require, exports, module) {
         newDepend: function(){
             var dlg = new NewTodoDialog({
                 template: $("#newtodo-dialog-tpl").text(),
-                dependents: this.model,
+                model: this.model,
                 collection: this.collection,
             });
             dlg.render();
