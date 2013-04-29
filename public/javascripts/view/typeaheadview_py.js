@@ -23,7 +23,7 @@ define(function(require, exports, module) {
             var s = candidateList[i].join('|');
             res.push(s);
         }
-        var s = '^(' + res.join(')?(') + ')$';
+        var s = '^(' + res.join(')?(') + ')?$';
         var re = new RegExp(s, 'i');
         return re.test(queryString);//.match(re);
     }
