@@ -14,21 +14,26 @@ requirejs.config({
 	async: 'require.async',
         template: '../../template',
         anim: '../anim',
+        raphael: 'raphael',
     },
     map:{
 	"*": {
 	    'smart': 'smart-2.9.min',
+            //'raphael': 'raphael.amd',
 	},
     },
     shim: {
 	underscore: {exports: '_'},
 	backbone: {deps:["underscore", "jquery"], exports: "Backbone"},
         bootstrap: {deps: ["jquery"]},
+        //eve: {deps: ["jquery"], exports: 'eve'},
+        raphael: {deps: ["jquery"], exports: 'Raphael'},
     }
 });
-requirejs(['underscore', 'smart-2.9.min'], function(_,s){
+requirejs(['underscore', 'smart', 'raphael'], function(_,s){
     console.log('undersocre loaded');
     console.log('smart loaded');
+    console.log('raphael loaded');
 });
 define(function(require, exports, module) {
     var $ = require('jquery')
@@ -37,6 +42,7 @@ define(function(require, exports, module) {
     , test = require('app/pages/test')
     , SideBarView = require('view/sidebar').SideBarView
     , MyTodoListView = require('view/mytodolist').MyTodoListView
+    , TodoFlowView = require('view/todoflow').TodoFlowView
     , App = require('model/app').App
     , Task = require('model/task').Task
     , Tasks = require('model/task').Tasks
@@ -53,6 +59,9 @@ define(function(require, exports, module) {
         el: $("#mylist"),
         collection: app.get('mytodolist'),
     });
-
+    var todoflow = new TodoFlowView({
+        el: $("#taskflow"),
+        collection: app.get('mytodolist'),
+    });
 });
 
