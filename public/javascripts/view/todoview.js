@@ -98,6 +98,9 @@ define(function(require, exports, module) {
 
         isHidden: function () {
             var model = this.model;
+            var textFilter = this.filter.findWhere({type: 'text'});
+            if (!textFilter.get('filte').call(textFilter, model))
+                return true;
             return !_.any(this.filter.where({selected: true}), function(filter){
                 var filte = filter.get('filte');
                 return filte.call(filter, model);

@@ -4,11 +4,13 @@ define(function(require, exports, module) {
     , bootstrap = require('bootstrap')
     , ENTER_KEY = 13
     , _ = require('underscore')
+    , matcher = require('matcher.pinyin')
     , ListView = require('view/listview').ListView
     , TodoView = require('view/todoview').TodoView;
 
-    var Button = Backbone.Model.extend({
+    var Filter = Backbone.Model.extend({
         defaults:{
+            type: 'button',
             name: null,
             selected: false,
             filte: function(task){
@@ -16,10 +18,10 @@ define(function(require, exports, module) {
             }
         },
     });
-    var Buttons = Backbone.Collection.extend({
-        model: Button,
+    var Filters = Backbone.Collection.extend({
+        model: Filter,
     });
-    var ButtonView = Backbone.View.extend({
+    var FilterView = Backbone.View.extend({
         events:{
             "click": "toggle",
         },
@@ -47,14 +49,16 @@ define(function(require, exports, module) {
             "click .newTask": "onNewTask",
             "keypress #newTask": "newOnEnter",
             "click .filter .btn.all": "onFilterAll",
+            "keyup .filter input": "onFilterByWord",
+            "click .filter .clear": "onClearFilterWord",
             //"click #maintab a": "onTab",
         },
         initialize: function(){
             //this.templateObj = new jSmart(this.options.template);
             //this.$el.find("#maintab :first").tab("show");
             this.$buttons = [];
-            this.buttons = new Buttons();
-            this.buttons.add([
+            this.filters = new Filters();
+            this.filters.add([
                 {
                     name: '就绪',
                     filte: function(task){
@@ -76,6 +80,19 @@ define(function(require, exports, module) {
                     },
                     selected: true,
                 },
+                {
+                    type: 'text',
+                    name: '名字',
+                    filte: function(task){
+                        var query = this.get('query');
+                        if (!query || query.length == 0){
+                            return true;
+                        }
+                        var name = task.get('name').toLowerCase();
+                        return matcher.match(name, query);
+                    },
+                    query: '',
+                },
             ]);
             this.$input = this.$("#newTask");
             this.list = new ListView({
@@ -83,7 +100,7 @@ define(function(require, exports, module) {
                 ItemView: TodoView,
                 collection: this.collection,
                 options:{
-                    filter: this.buttons,
+                    filter: this.filters,
                     template: this.$("#todolist-tpl").text(),
                 }
             });
@@ -92,25 +109,28 @@ define(function(require, exports, module) {
                 add:true,
             });
             var self = this;
-            var buttons = this.$(".filter .btn:not(.all)");
-            this.buttons.each(function(btn, index){
+            var buttons = this.$(".filter .btn.item");
+            _.each(this.filters.where({type: 'button'}), function(btn, index){
                 if (index < buttons.length){
-                    self.$buttons.push(new ButtonView({
+                    self.$buttons.push(new FilterView({
                         el: buttons[index],
                         model: btn,
                     }));
                 }
             });
-            this.listenTo(this.buttons, "change", this.updateFilter);
+            this.$filterByName = this.$(".filter input");
+            this.listenTo(this.filters, "change", this.updateFilter);
             this.updateFilter();
         },
         
         render: function(){
         },
         updateFilter: function(){
-            this.$(".filter .all").toggleClass("active", this.buttons.all(function(btn){
-                return btn.get('selected');
-            }));
+            var buttonFilters = this.filters.where({type: 'button'});
+            var active = _.all(buttonFilters, function(filter){
+                return filter.get('selected');
+            })
+            this.$(".filter .all").toggleClass("active", active);
         },
         // events
         onNewTask: function(){
@@ -133,7 +153,7 @@ define(function(require, exports, module) {
         },
         onFilterAll: function(){
             var value = !this.$(".filter .all").hasClass("active");
-            this.buttons.each(function(btn,index){
+            this.filters.each(function(btn,index){
                 btn.set('selected', value);
             });
         },
@@ -141,16 +161,21 @@ define(function(require, exports, module) {
             e.preventDefault();
             $(e.target).tab('show');
         },
-
-
+        onFilterByWord: function(e){
+            this.filters.findWhere({type: 'text'}).set('query', this.$filterByName.val());
+        },
+        onClearFilterWord: function(){
+            this.$filterByName.val('');
+            this.filters.findWhere({type: 'text'}).set('query', '');
+        },
         remove: function(){
             this.model = undefined;
             _.each(this.$buttons, function(btn, index){
                 btn.remove();
             });
             this.$buttons = undefined;
-            this.buttons.reset();
-            this.buttons = undefined;
+            this.filters.reset();
+            this.filters = undefined;
             
             Backbone.View.prototype.remove.apply(this, arguments);
         },
