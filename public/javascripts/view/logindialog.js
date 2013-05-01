@@ -32,6 +32,7 @@ define(function(require, exports, module) {
             }, function(err){
                 if (!err){
                     $el.modal('hide');
+                    Backbone.history.navigate("todolist", {trigger: true});
                 }
             });
         },

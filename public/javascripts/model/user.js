@@ -36,8 +36,8 @@ define(function(require, exports, module){
             }).complete(function(jqXHR, textStatus){
                 if (textStatus != 'success'){
                     next(textStatus);
-                }else if (result.result != 'ok'){
-                    next('login failed' + result.result);
+//                }else if (result.result != 'ok'){
+//                  next('login failed' + result.result);
                 }else{
                     next(null);
                 }

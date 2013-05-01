@@ -50,6 +50,7 @@ define(function(require, exports, module) {
     , Tasks = require('model/task').Tasks
     , config = require('app/config');
 
+
     var app = new App({
         mytodolist: new Tasks(),
         user: new User(),
@@ -58,30 +59,51 @@ define(function(require, exports, module) {
         el: $("#sideBar"),
         model: app
     });
-    var mytodolist = new MyTodoListView({
-        el: $("#mylist"),
-        collection: app.get('mytodolist'),
-    });
-    var todoflow = new TodoFlowView({
-        el: $("#taskflow"),
-        collection: app.get('mytodolist'),
-    });
 
-    $(".logout").click(function(){
-        app.get('user').logout();
-    });
-    app.get('user').checkLogin(function(err, login){
-        if (err){
-            console.log(err);
-            return;
-        }
-
-        if (!login){
+    var Workspace = Backbone.Router.extend({
+        routes: {
+            "login": "login",
+            "logout": "logout",
+            "todolist": "todolist",
+        },
+        
+        login: function(){
             var loginDialog = new LoginDialog({
                 el: $("#loginDialog"),
                 model: app.get('user'),
             });
-        }
+        },
+        logout: function(){
+            var router = this;
+            app.get('user').logout(function(){
+                router.navigate("login", {trigger: true});
+            });
+        },
+
+        todolist: function(){
+            var router = this;
+            app.get('user').checkLogin(function(err, login){
+                if (err){
+                    console.log(err);
+                    return;
+                }
+
+                if (!login){
+                    router.navigate("login", {trigger: true});
+                }else{
+                    var mytodolist = new MyTodoListView({
+                        el: $("#mylist"),
+                        collection: app.get('mytodolist'),
+                    });
+                    var todoflow = new TodoFlowView({
+                        el: $("#taskflow"),
+                        collection: app.get('mytodolist'),
+                    });
+                }
+            });
+        },
     });
+    var router = new Workspace();
+    Backbone.history.start();
 });
 
