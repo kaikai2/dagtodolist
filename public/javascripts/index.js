@@ -43,13 +43,16 @@ define(function(require, exports, module) {
     , SideBarView = require('view/sidebar').SideBarView
     , MyTodoListView = require('view/mytodolist').MyTodoListView
     , TodoFlowView = require('view/todoflow').TodoFlowView
+    , LoginDialog = require('view/logindialog').LoginDialog
     , App = require('model/app').App
+    , User = require('model/user').User
     , Task = require('model/task').Task
     , Tasks = require('model/task').Tasks
     , config = require('app/config');
 
     var app = new App({
         mytodolist: new Tasks(),
+        user: new User(),
     });
     var sidebar = new SideBarView({
         el: $("#sideBar"),
@@ -62,6 +65,20 @@ define(function(require, exports, module) {
     var todoflow = new TodoFlowView({
         el: $("#taskflow"),
         collection: app.get('mytodolist'),
+    });
+
+    app.get('user').checkLogin(function(err, login){
+        if (err){
+            console.log(err);
+            return;
+        }
+
+        if (!login){
+            var loginDialog = new LoginDialog({
+                el: $("#loginDialog"),
+                model: app.get('user'),
+            });
+        }
     });
 });
 

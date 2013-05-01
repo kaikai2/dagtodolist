@@ -14,11 +14,12 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <h1>大哥去干活(DAGTodoList)</h1>
-          <!--
-              <button class="btn">我的任务</button>
-              <button class="btn">关键路径</button>
-          -->
+          <a class="brand" href="#">大哥去干活(DAGTodoList)</a>
+          <div class="nav-collapse collapse">
+            <div class="navbar-form pull-right">
+              <button class="btn logout">登出</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -27,113 +28,116 @@
     <div class="container">
       <div class="row">
 
-      <!-- side bar  -->
-      <div id="sideBar" class="span3">
-        <div class="well">
-          <ul class="nav nav-tabs nav-stacked" id="maintab">
-            <li class="active">
-              <a href="#mylist" data-toggle="tab" data-target="#mylist">我的任务</a>
-            </li>
-            <li>
-              <a href="#taskflow" data-toggle="tab" data-target="#taskflow">任务流</a>
-            </li>
-            <li>
-              <a href="#alltask" data-toggle="tab" data-target="#alltask">所有任务</a>
-            </li>
-          </ul>
+        <!-- side bar  -->
+        <div id="sideBar" class="span3">
+          <div class="well">
+            <ul class="nav nav-tabs nav-stacked" id="maintab">
+              <li class="active">
+                <a href="#mylist" data-toggle="tab" data-target="#mylist">我的任务</a>
+              </li>
+              <li>
+                <a href="#taskflow" data-toggle="tab" data-target="#taskflow">任务流</a>
+              </li>
+              <li>
+                <a href="#alltask" data-toggle="tab" data-target="#alltask">所有任务</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
 
-      <!-- main frame -->
-      <div id="main" class="span9">
-        <div class="well">
-          <div class="tab-content" id="maintabcontent">
+        <!-- main frame -->
+        <div id="main" class="span9">
+          <div class="well">
+            <div class="tab-content" id="maintabcontent">
 
 
-            <!-- mylist panel -->
-            <div class="tab-pane active" id="mylist">
-              <div class="form-inline btn-toolbar">
-                <div class="input-append btn-group">
-                  <input type="text" id="newTask" name="newTask" placeholder="新任务">
-                  <button class="btn newTask">新增任务</button>
-                </div>
-                <div class="filter btn-group">
-                  <div class="btn-group">
-                    <button class="btn all"><span class="label">全部</span></button>
+              <!-- mylist panel -->
+              <div class="tab-pane active" id="mylist">
+                <div class="form-inline btn-toolbar">
+                  <div class="input-append btn-group">
+                    <input type="text" id="newTask" name="newTask" placeholder="新任务">
+                    <button class="btn newTask">新增任务</button>
                   </div>
-                  <div class="btn-group">
-                    <button class="btn ready item"><span class="label label-success">就绪</span></button>
-                    <button class="btn no-ready item"><span class="label label-warning">阻塞</span></button>
-                    <button class="btn done item"><span class="label">完成</span></button>
-                  </div>
-                  <div class="input-append">
-                    <input type="text" class="input-small" placeholder="筛选，支持拼音缩写" name="id" style="margin: 0 auto;" >
-                    <button class="btn clear"><span class="label">取消筛选</span></button>
-                  </div>
-                </div>
-              </div>
-              <!-- dialog -->
-              <script type="text/template" id="newtodo-dialog-tpl"> 
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h3>新增前置任务</h3>
-                </div>
-                <div class="modal-body">
-                  <div class="row-fluid">
-                    <div class="span4">
-                      <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
+                  <div class="filter btn-group">
+                    <div class="btn-group">
+                      <button class="btn all"><span class="label">全部</span></button>
                     </div>
-
-                    <div class="span8">
-                      <ul class="nav nav-tabs">
-                        <li class="active">
-                          <a href="#newtask" data-toggle="tab" data-target="#newtask">新任务</a>
-                        </li>
-                        <li>
-                          <a href="#selecttask" data-toggle="tab" data-target="#selecttask">现存任务</a>
-                        </li>
-                      </ul>
-                      <div class="tab-content">
-                        <div class="tab-pane active" id="newtask">
-                          <form>
-                            <fieldset>
-                              <label>标题</label>
-                              <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
-                              <label>内容</label>
-                              <textarea row="3" name="content" placeholder="任务内容"></textarea>
-                            </fieldset>
-                          </form>
-                        </div>
-
-                        <div class="tab-pane" id="selecttask">
-                          <form>
-                            <fieldset>
-                              <label>输入标题关键字可筛选任务</label>
-                              <input type="text" class="" placeholder="支持拼音缩写" name="id" style="margin: 0 auto;" data-provide="typeahead" data-items="10" data-source="[]">
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                  </div>                    
+                    <div class="btn-group">
+                      <button class="btn ready item"><span class="label label-success">就绪</span></button>
+                      <button class="btn no-ready item"><span class="label label-warning">阻塞</span></button>
+                      <button class="btn done item"><span class="label">完成</span></button>
+                    </div>
+                    <div class="input-append">
+                      <input type="text" class="input-small" placeholder="筛选，支持拼音缩写" name="id" style="margin: 0 auto;" >
+                      <button class="btn clear"><span class="label">取消筛选</span></button>
+                    </div>
                   </div>
                 </div>
-                <div class="modal-footer">
-                  <a href="#" class="btn cancel">取消</a>
-                  <a href="#" class="btn btn-primary add">新增</a>
-                </div>
-              </script>
+                <!-- dialog -->
+                <script type="text/template" id="newtodo-dialog-tpl"> 
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>新增前置任务</h3>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row-fluid">
+                      <div class="span4">
+                        <p>前置任务是完成当前任务的前提，只有所有前置任务都完成，当前任务才会成为<span class="label label-success">就绪</span>状态</p>
+                      </div>
 
-              <!-- template for a single todoview -->
-              <script type="text/template" id="todolist-tpl">
-                <div class="view form-inline">
-                  <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
+                      <div class="span8">
+                        <ul class="nav nav-tabs">
+                          <li class="active">
+                            <a href="#newtask" data-toggle="tab" data-target="#newtask">新任务</a>
+                          </li>
+                          <li>
+                            <a href="#selecttask" data-toggle="tab" data-target="#selecttask">现存任务</a>
+                          </li>
+                        </ul>
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="newtask">
+                            <form>
+                              <fieldset>
+                                <label>标题</label>
+                                <input type="text" class="name" name="name" placeholder="标题简要描述任务信息">
+                                <label>内容</label>
+                                <textarea row="3" name="content" placeholder="任务内容"></textarea>
+                              </fieldset>
+                            </form>
+                          </div>
+
+                          <div class="tab-pane" id="selecttask">
+                            <form>
+                              <fieldset>
+                                <label>输入标题关键字可筛选任务</label>
+                                <input type="text" class="" placeholder="支持拼音缩写" name="id" style="margin: 0 auto;" data-provide="typeahead" data-items="10" data-source="[]">
+                              </fieldset>
+                            </form>
+                          </div>
+                        </div>
+                      </div>                    
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#" class="btn cancel">取消</a>
+                    <a href="#" class="btn btn-primary add">新增</a>
+                  </div>
+                </script>
+
+                <!-- template for a single todoview -->
+                <script type="text/template" id="todolist-tpl">
+                  <div class="view form-inline">
+                    <input class="toggle" type="checkbox" {if $model.done}checked{/if}>
                     <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
                       <span class="label done">完成</span>
                       <span class="label label-success no-done ready">就绪</span>
                       <span class="label label-warning no-done no-ready">阻塞</span>
                     </span>
                     <label class="name">{$model.name}</label>
-                    <button class="btn destroy pull-right btn-danger btn-small">删除</button>
+                    <div class="btn-group pull-right">
+                      <button class="btn depend btn-small">新前置任务</button>
+                      <button class="btn destroy btn-danger btn-small">删除</button>
+                    </div>
                   </div>
                   <input class="edit" value="{$model.name}">
                   <div class="detail">
@@ -169,7 +173,7 @@
                     </div>
                     
                     <button class="btn save">保存</button>
-                    <button class="btn depend">新前置任务</button>
+
                   </div>
                   <!--
                       <div class="app-task">
@@ -179,48 +183,80 @@
                         <button class="btn">完成</button>
                         <button class="btn">开始</button>
                       </div>-->
-              </script>
+                </script>
 
-              <!-- template for depends in single todoview -->
-              <script type="text/template" id="dependslist-tpl">
-                <div cid="{$model._id}">
-                  <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
-                    <span class="label done">完成</span>
-                    <span class="label label-success no-done ready">就绪</span>
-                    <span class="label label-warning no-done no-ready">阻塞</span>
-                  </span>
-                  {$model.name}
-                  <button class="btn btn-mini btn-warning remove">解除依赖</button>
-                </div>
-              </script>
-
-
-              <ul id="todolist" class="todolist">
-              </ul>
-            </div>
+                <!-- template for depends in single todoview -->
+                <script type="text/template" id="dependslist-tpl">
+                  <div cid="{$model._id}">
+                    <span class="state{if $model.done} done{/if}{if $model.ready} ready{/if}">
+                      <span class="label done">完成</span>
+                      <span class="label label-success no-done ready">就绪</span>
+                      <span class="label label-warning no-done no-ready">阻塞</span>
+                    </span>
+                    {$model.name}
+                    <button class="btn btn-mini btn-warning remove">解除依赖</button>
+                  </div>
+                </script>
 
 
-            <!-- taskflow panel -->
-            <div class="tab-pane board" id="taskflow">
-              <p>work flow
-              </p>
-              <div class="graph">
+                <ul id="todolist" class="todolist">
+                </ul>
               </div>
-            </div>
 
 
-            <!-- alltask panel -->
-            <div class="tab-pane" id="alltask">
-              <p>         all task
+              <!-- taskflow panel -->
+              <div class="tab-pane board" id="taskflow">
+                <p>work flow
+                </p>
+                <div class="graph">
+                </div>
+              </div>
+
+
+              <!-- alltask panel -->
+              <div class="tab-pane" id="alltask">
+                <p>         all task
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- end of main frame -->
+        <!-- end of main frame -->
 
 
       </div>
     </div>
+
+    <!-- dialog:login -->
+    <div class="dialog modal hide fade" id="loginDialog">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>登录</h3>
+      </div>
+      <div class="modal-body">
+        <div class="row-fluid">
+          <div class="span4">
+            <p>请登录后使用</p>
+          </div>
+
+          <div class="span8">
+            <form>
+              <fieldset>
+                <label>用户名</label>
+                <input type="text" class="name" name="name" placeholder="请输入用户名">
+                <label>密码</label>
+                <input type="password" class="password" name="password" placeholder="请输入密码">
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <a href="#" class="btn cancel">取消</a>
+        <a href="#" class="btn btn-primary login">登录</a>
+      </div>
+    </div>
+    <!-- end of dialog:login -->
   </body>
 
 </html>

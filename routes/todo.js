@@ -111,7 +111,11 @@ _.extend(exports, {
     },
     get_all: function(req, res){
         var userid = req.session.userid || 1;
-        Todo.find(function(err, todos){
+        console.log('fetch all with' + userid);
+        Todo.find({$or: [
+            {assignedTo: userid},
+            {from: userid},
+        ]}, function(err, todos){
             if (err){
                 console.log(err);
                 res.send(500, err);

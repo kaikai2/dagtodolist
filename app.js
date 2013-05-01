@@ -33,8 +33,10 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-app.get('/users', user.list);
-
+app.get('/user/check', user.checkSession);
+app.get('/user/login', user.login);
+app.get('/user/logout', user.logout);
+restful.route(app, '/user', [], user);
 restful.route(app, '/todo', [], require('./routes/todo'));
 
 mongoose.connect('localhost', 'dagtodolist');
