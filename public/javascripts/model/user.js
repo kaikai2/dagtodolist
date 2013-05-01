@@ -12,36 +12,42 @@ define(function(require, exports, module){
         },
 
         checkLogin: function(next){
-            $.getJSON('/user/check', function(err, json){
-                if (err){
-                    next(err);
+            var result = null;
+            $.getJSON('/user/check', function(json){
+                result = json;
+            }).complete(function(jqXHR, textStatus){
+                if (textStatus != 'success'){
+                    next(textStatus);
                 }else{
-                    next(null, json.login);
+                    next(null, result.login);
                 }
+                result = undefined;
             });
         },
 	
         //µÇÂ½    
         login: function(data, next){
+            var result = null;
             $.getJSON('/user/login', {
                 username: data.name,
                 password: data.password
-            }, function(err, json){
-                if (err){
-                    next(err);
-                    return;
+            }, function(json){
+                result = json;
+            }).complete(function(jqXHR, textStatus){
+                if (textStatus != 'success'){
+                    next(textStatus);
+                }else if (result.result != 'ok'){
+                    next('login failed' + result.result);
+                }else{
+                    next(null);
                 }
-                if (json.result != 'ok'){
-                    next('login failed' + json.result);
-                    return;
-                }
-                next(null);
+                result = undefined;
             });
         },
         
         //µÇ³ö
         logout: function(next){
-            $.getJSON('/user/logout', next);
+            $.getJSON('/user/logout').complete(next);
         },
 
         register: function(username, password, next){

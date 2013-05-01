@@ -67,6 +67,9 @@ define(function(require, exports, module) {
         collection: app.get('mytodolist'),
     });
 
+    $(".logout").click(function(){
+        app.get('user').logout();
+    });
     app.get('user').checkLogin(function(err, login){
         if (err){
             console.log(err);
