@@ -17,6 +17,7 @@ define(function(require, exports, module) {
             "click .cancel": "cancel",
             "click .add": "add",
 	    "hidden": "remove",
+            "submit form": "preventDefault",
         },
         initialize: function(){
             this.$el.html(this.options.template);
@@ -37,6 +38,9 @@ define(function(require, exports, module) {
         },
 
 	// events
+        preventDefault: function(e){
+            return false;
+        },
         add: function(){
             var curId = this.$(".tab-pane.active").attr('id');
             if (curId == "newtask"){
