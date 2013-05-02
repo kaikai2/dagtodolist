@@ -24,16 +24,8 @@ define(function(require, exports, module) {
             this.collection.trigger('complete:depends');
         },
         updateState: function(){
-            if (this.model.get('ready')){
-                this.$(".state").addClass("ready");
-            }else{
-                this.$(".state").removeClass("ready");
-            }
-            if (this.model.get('done')){
-                this.$(".state").addClass("done");
-            }else{
-                this.$(".state").removeClass("done");
-            }
+            this.$(".state").toggleClass("ready", this.model.get('ready'));
+            this.$(".state").toggleClass("done", this.model.get('done'));
         },
         render: function(){
             this.$el.html(
