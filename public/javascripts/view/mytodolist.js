@@ -1,4 +1,4 @@
-define(function(require, exports, module) {
+﻿define(function(require, exports, module) {
     var Backbone = require('backbone')
     , $ = require('jquery')
     , bootstrap = require('bootstrap')
@@ -103,10 +103,6 @@ define(function(require, exports, module) {
                     filter: this.filters,
                     template: this.$("#todolist-tpl").text(),
                 }
-            });
-            this.collection.fetch({
-//                reset:true,
-                add:true,
             });
             var self = this;
             var buttons = this.$(".filter .btn.item");

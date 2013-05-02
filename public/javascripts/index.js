@@ -60,11 +60,20 @@ define(function(require, exports, module) {
         model: app
     });
 
+    var mytodolist = new MyTodoListView({
+        el: $("#mylist"),
+        collection: app.get('mytodolist'),
+    });
+    var todoflow = new TodoFlowView({
+        el: $("#taskflow"),
+        collection: app.get('mytodolist'),
+    });
     var Workspace = Backbone.Router.extend({
         routes: {
             "login": "login",
             "logout": "logout",
             "todolist": "todolist",
+            "*page": "check",
         },
         
         login: function(){
@@ -80,7 +89,7 @@ define(function(require, exports, module) {
             });
         },
 
-        todolist: function(){
+        check: function(page){
             var router = this;
             app.get('user').checkLogin(function(err, login){
                 if (err){
@@ -91,16 +100,12 @@ define(function(require, exports, module) {
                 if (!login){
                     router.navigate("login", {trigger: true});
                 }else{
-                    var mytodolist = new MyTodoListView({
-                        el: $("#mylist"),
-                        collection: app.get('mytodolist'),
-                    });
-                    var todoflow = new TodoFlowView({
-                        el: $("#taskflow"),
-                        collection: app.get('mytodolist'),
-                    });
+                    router.navigate("todolist", {trigger: true});
                 }
             });
+        },
+        todolist: function(){
+            app.get('mytodolist').fetch({add:true});
         },
     });
     var router = new Workspace();
