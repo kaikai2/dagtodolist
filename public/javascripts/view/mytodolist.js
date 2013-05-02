@@ -149,7 +149,7 @@
         },
         onFilterAll: function(){
             var value = !this.$(".filter .all").hasClass("active");
-            this.filters.each(function(btn,index){
+            _.each(this.filters.where({type: 'button'}), function(btn,index){
                 btn.set('selected', value);
             });
         },
