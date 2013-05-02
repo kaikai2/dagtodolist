@@ -35,9 +35,8 @@ define(function(require, exports, module) {
             //this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'visible', this.toggleVisible);
-            this.listenTo(this.model, 'complete:depends', this.checkDepends);
-            this.listenTo(this.model, 'change:depends', this.checkDepends);
-            this.listenTo(this.model, 'change:depends', this.checkReady);
+            this.listenTo(this.model, 'complete:depends change:depends', this.checkDepends);
+            //this.listenTo(this.model, 'change:depends', this.checkReady);
             this.listenTo(this.model, 'change:done', this.checkDone);
 	    this.listenTo(this.model, 'change:ready', this.updateReady);
 
@@ -53,7 +52,7 @@ define(function(require, exports, module) {
                 this.depends.remove();
                 this.depends = undefined;
             }
-            this.checkReady();
+            //this.checkReady();
             this.$el.html(
                 this.templateObj.fetch({
                     model: this.model.toJSON(),
@@ -77,12 +76,10 @@ define(function(require, exports, module) {
             this.$el.toggleClass('detail');
         },
         checkReady: function(){
-            this.model.set('ready', undefined == this.dependsCollection.findWhere({done: false}) ? true : false);
-            if (this.model.get('ready')){
-                this.$(".view .state").addClass("ready");
-            }else{
-                this.$(".view .state").removeClass("ready");
-            }
+            var ready = undefined == this.dependsCollection.findWhere({done: false}) ? true : false;
+            console.log('set', this.model.get('name'), this.model.get('ready'), 'to', ready);
+            this.model.set('ready', ready);
+            this.$(".view .state").toggleClass("ready", ready);
         },
 	updateReady: function(){
 	    this.$el
