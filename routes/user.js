@@ -16,7 +16,7 @@ _.extend(exports, {
                 return;
             }
             if (user && user.id == req.session.userid){
-                res.json({login: true});
+                res.json({login: true, name: user.name, nickname: user.nickname});
             }else{
                 req.session.userid = undefined;
                 res.json({login: false});

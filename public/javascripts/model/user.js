@@ -13,21 +13,24 @@ define(function(require, exports, module){
 
         checkLogin: function(next){
             var result = null;
+            var self = this;
             $.getJSON('/user/check', function(json){
                 result = json;
             }).complete(function(jqXHR, textStatus){
                 if (textStatus != 'success'){
                     next(textStatus);
                 }else{
+                    self.set({name: result.name, nickname: result.nickname});
                     next(null, result.login);
                 }
                 result = undefined;
             });
         },
 	
-        //µÇÂ½    
+        //µÇÂ½ 
         login: function(data, next){
             var result = null;
+            var self = this;
             $.getJSON('/user/login', {
                 username: data.name,
                 password: data.password
@@ -39,6 +42,7 @@ define(function(require, exports, module){
 //                }else if (result.result != 'ok'){
 //                  next('login failed' + result.result);
                 }else{
+                    self.set({name: data.name, nickname: data.name});
                     next(null);
                 }
                 result = undefined;

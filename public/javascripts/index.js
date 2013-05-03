@@ -105,6 +105,7 @@ define(function(require, exports, module) {
             });
         },
         todolist: function(){
+            $("#username").text(app.get('user').get('name'));
             app.get('mytodolist').fetch({add:true});
         },
     });
