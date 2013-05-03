@@ -19,6 +19,7 @@ define(function(require, exports, module){
         },
         toggle: function(){
             this.set('done', !this.get('done'));
+            this.save();
         },
     },{
     });
