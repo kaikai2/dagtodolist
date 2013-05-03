@@ -38,11 +38,12 @@ define(function(require, exports, module) {
             this.listenTo(this.model, 'complete:depends change:depends', this.checkDepends);
             //this.listenTo(this.model, 'change:depends', this.checkReady);
             this.listenTo(this.model, 'change:done', this.checkDone);
-	    this.listenTo(this.model, 'change:ready', this.updateReady);
+            this.listenTo(this.model, 'change:ready', this.updateReady);
 
             this.dependsCollection = this.collection.depends(this.model);
             this.listenTo(this.dependsCollection, 'complete:depends remove add', this.checkReady);
             this.listenTo(this.filter, "change", this.toggleVisible);
+            this.checkReady();
             this.render();
         },
         
@@ -52,7 +53,6 @@ define(function(require, exports, module) {
                 this.depends.remove();
                 this.depends = undefined;
             }
-            //this.checkReady();
             this.$el.html(
                 this.templateObj.fetch({
                     model: this.model.toJSON(),
@@ -81,9 +81,9 @@ define(function(require, exports, module) {
             this.model.set('ready', ready);
             this.$(".view .state").toggleClass("ready", ready);
         },
-	updateReady: function(){
-	    this.$el
-	},
+        updateReady: function(){
+            this.$el
+        },
         checkDepends: function(){
             //this.render();
             var models = this.collection.depends(this.model).models;
