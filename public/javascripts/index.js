@@ -105,6 +105,10 @@ define(function(require, exports, module) {
             });
         },
         todolist: function(){
+            if (app.get('user').get('name') == null){
+                router.navigate("check", {trigger: true});
+                return;
+            }
             $("#username").text(app.get('user').get('name'));
             app.get('mytodolist').fetch({add:true});
         },
