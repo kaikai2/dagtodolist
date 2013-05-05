@@ -32,9 +32,10 @@ define(function(require, exports, module) {
             this.model.set('ready', ready);
         },
         checkDepends: function(){
-            //this.render();
-            var models = this.collection.depends(this.model).models;
-            this.dependsCollection.set(models);
+            if (!_.isEqual(this.model.previous('depends'), this.model.get('depends'))){
+                var models = this.collection.depends(this.model).models;
+                this.dependsCollection.set(models);
+            }
         },
 
         isHidden: function () {
@@ -104,7 +105,7 @@ define(function(require, exports, module) {
                 })
             );
             this.$el.toggleClass('completed', this.model.get('done'));
-            this.toggleVisible();
+            this.updateVisible();
             this.$input = this.$('.edit');
 
             this.depends = new ListView({
