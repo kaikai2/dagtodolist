@@ -26,11 +26,6 @@ define(function(require, exports, module) {
             this.listenTo(this.dependsCollection, 'complete:depends remove add', this.checkReady);
             this.checkReady();
         },
-        
-/*        render: function(){
-            return this;
-        },
-        */
         checkReady: function(){
             var ready = undefined == this.dependsCollection.findWhere({done: false}) ? true : false;
             console.log('set', this.model.get('name'), this.model.get('ready'), 'to', ready);
@@ -86,12 +81,11 @@ define(function(require, exports, module) {
             this.listoptions = this.options.listoptions;
             this.templateObj = new jSmart(this.listoptions.template);
 
-            this.listenTo(this.model, 'destroy', this.remove);
-            this.listenTo(this.model, 'visible', this.toggleVisible);
-            this.listenTo(this.model, 'change:done', this.checkDone);
+            this.listenTo(this.model, 'visible', this.updateVisible);
+            this.listenTo(this.model, 'change:done', this.updateDone);
             this.listenTo(this.model, 'change:ready', this.updateReady);
 
-            this.listenTo(this.filter, "change", this.toggleVisible);
+            this.listenTo(this.filter, "change", this.updateVisible);
             this.render();
         },
         
@@ -132,11 +126,11 @@ define(function(require, exports, module) {
             var ready = this.model.get('ready');
             this.$(".view .state").toggleClass("ready", ready);
         },
-        toggleVisible: function () {
+        updateVisible: function () {
             this.$el.toggleClass('hidden', this.isHidden());
         },
 
-        checkDone: function() {
+        updateDone: function() {
             //this.$(".toggle").prop("checked", this.model.get('done'));
             this.$(".view .state").toggleClass("done", this.model.get('done'));
 	},
