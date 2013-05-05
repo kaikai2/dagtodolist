@@ -13,27 +13,39 @@ define(function(require, exports, module) {
             this.paper = this.options.paper;
 
             this.obj = this.paper.set();
-            var rect = this.paper.rect(0, 0, 100, 38, 10);
-            this.obj.push(rect);
-            var text = this.paper.text(5, 5, this.model.get('name'));
-            text.attr({
+            this.rect = this.paper.rect(0, 0, 100, 38, 10);
+            this.obj.push(this.rect);
+            this.text = this.paper.text(5, 5, this.model.get('name'));
+            this.obj.push(this.text);
+            this.setElement(this.obj.node);
+            //var color = Raphael.getColor();
+
+            this.obj.drag(this.move, this.dragger, this.up, this, this, this);
+            this.listenTo(this.model, 'change', this.render);
+            this.render();
+        },
+
+        render: function(){
+            var color = '#468847';
+            if (this.model.get('done')){
+                color = '#999999';
+            }else if (this.model.get('ready')){
+                color = '#468847';
+            }else{
+                color = '#f89406';
+            }
+                
+            this.text.attr({
+                text: this.model.get('name'),
                 "text-anchor": "start",
             });
-            this.obj.push(text);
-            this.setElement(this.obj.node);
-            var color = Raphael.getColor();
-            rect.attr({
+            this.rect.attr({
                 fill: color,
                 stroke: color,
                 "fill-opacity": 0,
                 "stroke-width": 2,
                 cursor: "move",
             });
-
-            this.obj.drag(this.move, this.dragger, this.up, this, this, this);
-        },
-
-        render: function(){
         },
         dragger: function () {
             this.ox = 0;//this.obj.type == "rect" ? this.obj.attr("x") : this.obj.attr("cx");
@@ -63,6 +75,11 @@ define(function(require, exports, module) {
             //this.obj.animate({"fill-opacity": 0}, 500);
         },
         remove: function(){
+            this.obj.remove();
+            this.rect = undefined;
+            this.text = undefined;
+            this.obj = undefined;
+
             Backbone.View.prototype.remove.apply(this, arguments);
         }
     });
