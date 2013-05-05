@@ -13,13 +13,17 @@ define(function(require, exports, module) {
         events:{
             "click .cancel": "cancel",
             "click .login": "login",
-	    "hidden": "remove",
+	    //"hidden": "remove",
         },
         initialize: function(){
             //this.$el.addClass("modal hide fade");
             this.$el.modal();
         },
-        
+
+        show: function(){
+            this.$("input").val('');
+            this.$el.modal('show');
+        },
         render: function(){
         },
 

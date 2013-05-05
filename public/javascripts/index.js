@@ -68,6 +68,10 @@ define(function(require, exports, module) {
         el: $("#taskflow"),
         collection: app.get('mytodolist'),
     });
+    var loginDialog = new LoginDialog({
+        el: $("#loginDialog"),
+        model: app.get('user'),
+    });
     var Workspace = Backbone.Router.extend({
         routes: {
             "login": "login",
@@ -77,10 +81,7 @@ define(function(require, exports, module) {
         },
         
         login: function(){
-            var loginDialog = new LoginDialog({
-                el: $("#loginDialog"),
-                model: app.get('user'),
-            });
+            loginDialog.show();
         },
         logout: function(){
             var router = this;
