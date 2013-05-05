@@ -25,12 +25,11 @@ define(function(require, exports, module) {
                 collection: this.collection,
                 listoptions: this.options.options,
             });
-//            this.$el.append(view.render().el);
             this.views.push(view);
+            return view;
         },
         addAll: function(){
             this._removeViews();
-//            this.$el.html('');
             this.collection.each(this.addOne, this);
         },
         filterOne: function(model){
@@ -52,8 +51,10 @@ define(function(require, exports, module) {
             });
         },
         fire: function(eventName){
+            var args = arguments;
             this.collection.each(function(model){
-                model.trigger(eventName);
+                model.trigger.apply(model, args);
+                //model.trigger(eventName);
             }, this);
         },
         _removeViews: function(){
@@ -71,18 +72,13 @@ define(function(require, exports, module) {
         events:{
         },
         addOne: function(model){
-            var view = new this.ItemView({
-                model: model,
-                collection: this.collection,
-                listoptions: this.options.options,
-            });
+            var view = ListViewBase.prototype.addOne.apply(this, arguments);
             this.$el.append(view.render().el);
-            this.views.push(view);
+            return view;
         },
         addAll: function(){
-            this._removeViews();
             this.$el.html('');
-            this.collection.each(this.addOne, this);
+            ListViewBase.prototype.addAll.apply(this, arguments);
         },
         remove: function(){
             ListViewBase.prototype.remove.apply(this, arguments);
