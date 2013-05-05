@@ -195,14 +195,16 @@ define(function(require, exports, module) {
             //this.obj.animate({"fill-opacity": 0}, 500);
         },
         remove: function(){
-            this.depends.remove();
-            this.depends = undefined;
-
-            this.obj.remove();
+            if (this.depends){
+                this.depends.remove();
+                this.depends = undefined;
+            }
             this.rect = undefined;
             this.text = undefined;
-            this.obj = undefined;
-
+            if (this.obj){
+                this.obj.remove();
+                this.obj = undefined;
+            }
             TodoViewBase.prototype.remove.apply(this, arguments);
         }
     });
