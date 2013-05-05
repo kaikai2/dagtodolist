@@ -18,7 +18,7 @@ define(function(require, exports, module) {
         },
         initialize: function(){
             //this.$el.addClass("modal hide fade");
-            this.$el.modal();
+            this.$el.modal({show: false});
         },
 
         show: function(){
