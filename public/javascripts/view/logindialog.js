@@ -13,6 +13,7 @@ define(function(require, exports, module) {
         events:{
             "click .cancel": "cancel",
             "click .login": "login",
+            "keypress input[name=name]": "submit",
 	    //"hidden": "remove",
         },
         initialize: function(){
@@ -28,6 +29,11 @@ define(function(require, exports, module) {
         },
 
 	// events
+        submit: function(e){
+            if (e.which === ENTER_KEY){
+                this.login();
+            }
+        },
         login: function(){
             var $el = this.$el;
             this.model.login({
