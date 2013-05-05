@@ -4,12 +4,118 @@ define(function(require, exports, module) {
     , ENTER_KEY = 13
     , _ = require('underscore')
     , Raphael = require('raphael.amd')
-    , ListView = require('view/listview').ListView;
+    , ListViewBase = require('view/listview').ListViewBase
+    , TodoViewBase = require('view/todoview').TodoViewBase;
 
-    var TodoGraphView = Backbone.View.extend({
+    var TodoDependsGraphView = Backbone.View.extend({
+        el: null,
+        initialize: function(){
+            this.paper = this.options.paper;
+            this.from = this.options.listoptions.from; // from model
+            this.rect = this.options.listoptions.rect; // from obj
+            this.model; // to model
+            this.listenTo(this.model, "graphmove", this.updateDest);
+            this.listenTo(this.from, "graphmove", this.updateSource);
+            this.update(undefined);
+        },
+        clear: function(){
+            if (this.line){
+                if (this.line.bg){
+                    this.line.bg.remove();
+                }
+                if (this.line.line){
+                    this.line.line.remove();
+                }
+                this.line = undefined;
+            }
+        },
+        updateDest: function(dstObj){
+            this.dstObj = dstObj;
+            this.update(dstObj);
+        },
+        updateSource: function(sourceObj){
+            this.update(this.dstObj);
+        },
+        update: function(obj2, dx, dy){
+            this.clear();
+            var obj1 = this.rect;
+            if (!obj2){
+                obj2 = obj1;
+            }
+            var line = undefined;
+            var bg = '#555|5'
+            if (obj1.line && obj1.from && obj1.to) {
+                line = obj1;
+                obj1 = line.from;
+                obj2 = line.to;
+            }
+            var bb1 = obj1.getBBox(),
+            bb2 = obj2.getBBox(),
+            p = [{x: bb1.x + bb1.width / 2, y: bb1.y - 1},
+                 {x: bb1.x + bb1.width / 2, y: bb1.y + bb1.height + 1},
+                 {x: bb1.x - 1, y: bb1.y + bb1.height / 2},
+                 {x: bb1.x + bb1.width + 1, y: bb1.y + bb1.height / 2},
+
+                 {x: bb2.x + bb2.width / 2, y: bb2.y - 1},
+                 {x: bb2.x + bb2.width / 2, y: bb2.y + bb2.height + 1},
+                 {x: bb2.x - 1, y: bb2.y + bb2.height / 2},
+                 {x: bb2.x + bb2.width + 1, y: bb2.y + bb2.height / 2}],
+            d = {}, dis = [];
+            for (var i = 0; i < 4; i++) {
+                for (var j = 4; j < 8; j++) {
+                    var dx = Math.abs(p[i].x - p[j].x),
+                    dy = Math.abs(p[i].y - p[j].y);
+                    if ((i == j - 4) || (
+                        ((i != 3 && j != 6) || p[i].x < p[j].x) &&
+                        ((i != 2 && j != 7) || p[i].x > p[j].x) &&
+                        ((i != 0 && j != 5) || p[i].y > p[j].y) &&
+                        ((i != 1 && j != 4) || p[i].y < p[j].y))) {
+                        dis.push(dx + dy);
+                        d[dis[dis.length - 1]] = [i, j];
+                    }
+                }
+            }
+            var res = [0, 4];
+            if (dis.length != 0) {
+                res = d[Math.min.apply(Math, dis)];
+            }
+            var x1 = p[res[0]].x,
+            y1 = p[res[0]].y,
+            x4 = p[res[1]].x,
+            y4 = p[res[1]].y;
+            dx = Math.max(Math.abs(x1 - x4) / 2, 10);
+            dy = Math.max(Math.abs(y1 - y4) / 2, 10);
+            var x2 = [x1, x1, x1 - dx, x1 + dx][res[0]].toFixed(3),
+            y2 = [y1 - dy, y1 + dy, y1, y1][res[0]].toFixed(3),
+            x3 = [0, 0, 0, 0, x4, x4, x4 - dx, x4 + dx][res[1]].toFixed(3),
+            y3 = [0, 0, 0, 0, y1 + dy, y1 - dy, y4, y4][res[1]].toFixed(3);
+            var path = ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+            if (line && line.line) {
+                line.bg && line.bg.attr({path: path});
+                line.line.attr({path: path});
+            } else {
+                var color = typeof line == "string" ? line : "#000";
+                this.line = {
+                    bg: bg && bg.split && this.paper.path(path).attr({stroke: bg.split("|")[0], fill: "none", "stroke-width": bg.split("|")[1] || 3}),
+                    line: this.paper.path(path).attr({stroke: color, fill: "none"}),
+                    from: obj1,
+                    to: obj2
+                };
+            }
+        },
+        remove: function(){
+            this.clear();
+            this.paper = undefined;
+            Backbone.View.prototype.remove.apply(this, arguments);
+        }
+    });
+
+    var TodoGraphView = TodoViewBase.extend({
         el: null,
         
         initialize: function(){
+            TodoViewBase.prototype.initialize.apply(this, arguments);
+
             this.paper = this.options.paper;
 
             this.obj = this.paper.set();
@@ -21,11 +127,32 @@ define(function(require, exports, module) {
             //var color = Raphael.getColor();
 
             this.obj.drag(this.move, this.dragger, this.up, this, this, this);
-            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'change', this.updateStatus);
+
+            
             this.render();
         },
-
         render: function(){
+            if (this.depends){
+                this.depends.remove();
+                this.depends = undefined;
+            }
+            this.updateStatus();
+            
+            this.depends = new GraphContainerView({
+                paper: this.paper,
+                ItemView: TodoDependsGraphView,
+                collection: this.dependsCollection,
+                options: {
+                    from: this.model,
+                    rect: this.rect,
+                    
+                },
+            });
+
+            return this;
+        },
+        updateStatus: function(){
             var color = '#468847';
             if (this.model.get('done')){
                 color = '#999999';
@@ -34,7 +161,7 @@ define(function(require, exports, module) {
             }else{
                 color = '#f89406';
             }
-                
+            
             this.text.attr({
                 text: this.model.get('name'),
                 "text-anchor": "start",
@@ -48,53 +175,48 @@ define(function(require, exports, module) {
             });
         },
         dragger: function () {
-            this.ox = 0;//this.obj.type == "rect" ? this.obj.attr("x") : this.obj.attr("cx");
-            this.oy = 0;//this.obj.type == "rect" ? this.obj.attr("y") : this.obj.attr("cy");
+            this.ox = 0;
+            this.oy = 0;
             //this.obj.animate({"fill-opacity": .2}, 500);
         },
         move: function(dx, dy){
-            /*var att = this.obj.type == "rect" ? {
-                x: this.ox + dx,
-                y: this.oy + dy
-            } : {
-                cx: this.ox + dx,
-                cy: this.oy + dy
-            };
-            this.obj.attr(att);
-            */
             this.obj.translate(-this.ox, -this.oy);
             this.obj.translate(dx, dy);
             this.ox = dx;
             this.oy = dy;
             //for (var i = connections.length; i--;) {
-                //this.paper.connection(connections[i]);
+            //this.paper.connection(connections[i]);
             //}
+            this.model.trigger("graphmove", this.rect, dx, dy);
+            //this.depends.fire("graphmove", this.rect, dx, dy);
             this.paper.safari();
         },
         up: function () {
             //this.obj.animate({"fill-opacity": 0}, 500);
         },
         remove: function(){
+            this.depends.remove();
+            this.depends = undefined;
+
             this.obj.remove();
             this.rect = undefined;
             this.text = undefined;
             this.obj = undefined;
 
-            Backbone.View.prototype.remove.apply(this, arguments);
+            TodoViewBase.prototype.remove.apply(this, arguments);
         }
     });
-    var TodoDependsGraphView = Backbone.View.extend({
-        el: null,
-        initialize: function(){
-            
-        },
-    });
 
-    var GraphContainerView = ListView.extend({
+    var GraphContainerView = ListViewBase.extend({
         initialize: function(){
-            ListView.prototype.initialize.apply(this, arguments);
-            var obj = this.$el.get(0);
-            this.paper = Raphael(obj, this.$el.width(), this.$el.height());
+            if (this.options.paper){
+                this.paper = this.options.paper;
+            }else{
+                var obj = this.$el.get(0);
+                this.paper = Raphael(obj, this.$el.width(), this.$el.height());
+            }
+            // this.paper must initialize before addOne might be called
+            ListViewBase.prototype.initialize.apply(this, arguments);
         },
 
         addOne: function(model){
@@ -107,12 +229,15 @@ define(function(require, exports, module) {
             });
             //this.$el.append(view.render().el);
             this.views.push(view);
+            return view;
         },
 
         remove: function(){
-            this.paper.remove();
+            if (this.options.paper !== this.paper){
+                this.paper.remove();
+            }
             this.paper = undefined;
-            ListView.prototype.remove.apply(this, arguments);
+            ListViewBase.prototype.remove.apply(this, arguments);
         }
     });
 
