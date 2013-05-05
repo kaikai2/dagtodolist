@@ -27,13 +27,12 @@ requirejs.config({
 	backbone: {deps:["underscore", "jquery"], exports: "Backbone"},
         bootstrap: {deps: ["jquery"]},
         //eve: {deps: ["jquery"], exports: 'eve'},
-        raphael: {deps: ["jquery"], exports: 'Raphael'},
+        //raphael: {deps: ["jquery"], exports: 'Raphael'},
     }
 });
-requirejs(['underscore', 'smart', 'raphael'], function(_,s){
+requirejs(['underscore', 'smart', 'raphael.amd'], function(_,s){
     console.log('undersocre loaded');
     console.log('smart loaded');
-    console.log('raphael loaded');
 });
 define(function(require, exports, module) {
     var $ = require('jquery')

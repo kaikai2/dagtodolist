@@ -110,13 +110,9 @@ define(function(require, exports, module) {
             //this.collection.trigger('complete');
 	    e.stopPropagation();
         },
-	checkDone: function() {
-	    //this.$(".toggle").prop("checked", this.model.get('done'));
-            if (this.model.get('done')){
-                this.$(".view .state").addClass("done");
-            }else{
-                this.$(".view .state").removeClass("done");
-            }
+        checkDone: function() {
+            //this.$(".toggle").prop("checked", this.model.get('done'));
+            this.$(".view .state").toogleClass("done", this.model.get('done'));
 	},
 	
         // Switch this view into `"editing"` mode, displaying the input field.

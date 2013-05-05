@@ -14,6 +14,6 @@
 // should use the combined raphael.js file.
 
 //define(['raphael.core', 'raphael.svg', 'raphael.vml'], function (R) {  
-define(['raphael'], function (R) {  
+define("raphael.amd", ['raphael'], function (R) {  
     return R.ninja();
 });
