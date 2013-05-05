@@ -91,8 +91,6 @@ define(function(require, exports, module) {
         },
         
         render: function(){
-            var self = this;
-
             if (this.depends){
                 this.depends.remove();
                 this.depends = undefined;

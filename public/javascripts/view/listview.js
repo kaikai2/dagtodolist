@@ -3,7 +3,7 @@ define(function(require, exports, module) {
     , $ = require('jquery')
     , _ = require('underscore');
 
-    exports.ListView = Backbone.View.extend({
+    var ListViewBase = Backbone.View.extend({
         el: null,
         collection: null,
         templateObj: null,
@@ -17,22 +17,20 @@ define(function(require, exports, module) {
             this.listenTo(this.collection, 'remove', this.onRemove);
             this.listenTo(this.collection, 'all', this.render);
             this.listenTo(this.collection, 'reset', this.addAll);
-//            this.templateObj = new jSmart(this.options.template);
             this.addAll();
         },
         addOne: function(model){
             var view = new this.ItemView({
                 model: model,
-                //template: this.options.options.template,
                 collection: this.collection,
                 listoptions: this.options.options,
             });
-            this.$el.append(view.render().el);
+//            this.$el.append(view.render().el);
             this.views.push(view);
         },
         addAll: function(){
             this._removeViews();
-            this.$el.html('');
+//            this.$el.html('');
             this.collection.each(this.addOne, this);
         },
         filterOne: function(model){
@@ -42,12 +40,6 @@ define(function(require, exports, module) {
             this.collection.each(this.filterOne, this);
         },
         render: function(){
-            /*this.$el.children('ul').html('');
-            var self = this;
-            this.collection.forEach(function(item){
-                self.onAdd(item);
-            });*/
-            //this.$el.children('ul').listview('refresh');
         },
         onRemove: function(){
             var collection = this.collection;
@@ -71,6 +63,29 @@ define(function(require, exports, module) {
         remove: function(){
             this._removeViews();
             Backbone.View.prototype.remove.apply(this, arguments);
+        }
+    });
+    exports.ListViewBase = ListViewBase;
+
+    exports.ListView = ListViewBase.extend({
+        events:{
+        },
+        addOne: function(model){
+            var view = new this.ItemView({
+                model: model,
+                collection: this.collection,
+                listoptions: this.options.options,
+            });
+            this.$el.append(view.render().el);
+            this.views.push(view);
+        },
+        addAll: function(){
+            this._removeViews();
+            this.$el.html('');
+            this.collection.each(this.addOne, this);
+        },
+        remove: function(){
+            ListViewBase.prototype.remove.apply(this, arguments);
         }
     });
 });
