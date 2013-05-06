@@ -42,7 +42,7 @@ define(function(require, exports, module) {
             $(e.target).tab('show');
         },
         onTabShown: function(e){
-            e.target.trigger("shown");
+            $($(e.target).data("target")).trigger("shown");
         },
     });
 });

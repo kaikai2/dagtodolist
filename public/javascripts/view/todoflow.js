@@ -211,7 +211,6 @@ define(function(require, exports, module) {
 
     var GraphContainerView = ListViewBase.extend({
         event: {
-            "shown": "onResize"
         },
         initialize: function(){
             if (this.options.paper){
@@ -226,7 +225,7 @@ define(function(require, exports, module) {
             // this.paper must initialize before addOne might be called
             ListViewBase.prototype.initialize.apply(this, arguments);
         },
-        onResize: function(){
+        resize: function(){
             this.paper.setSize(this.$el.width(), this.$el.height());
         },
         addOne: function(model){
@@ -279,7 +278,7 @@ define(function(require, exports, module) {
             
         },
         onTabShown: function(){
-            this.graph.trigger("shown");
+            this.graph.resize();
         },
         remove: function(){
             
