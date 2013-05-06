@@ -89,15 +89,31 @@ define(function(require, exports, module) {
             y2 = [y1 - dy, y1 + dy, y1, y1][res[0]].toFixed(3),
             x3 = [0, 0, 0, 0, x4, x4, x4 - dx, x4 + dx][res[1]].toFixed(3),
             y3 = [0, 0, 0, 0, y1 + dy, y1 - dy, y4, y4][res[1]].toFixed(3);
-            var path = ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+            var path = ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3),
+       /*                 "m", 0, 10,
+                        "c", 15, 0, 15, -20, 0, -20,
+                        "s", -15, 20, 0, 20,*/
+                       ].join(",");
+            var attr = {
+                path: path
+            };
             if (line && line.line) {
-                line.bg && line.bg.attr({path: path});
-                line.line.attr({path: path});
+                line.bg && line.bg.attr(attr);
+                line.line.attr(attr);
             } else {
                 var color = typeof line == "string" ? line : "#000";
                 this.line = {
-                    bg: bg && bg.split && this.paper.path(path).attr({stroke: bg.split("|")[0], fill: "none", "stroke-width": bg.split("|")[1] || 3}),
-                    line: this.paper.path(path).attr({stroke: color, fill: "none"}),
+                    bg: bg && bg.split && this.paper.path(path).attr({
+                        stroke: bg.split("|")[0],
+                        fill: "none",
+                        "stroke-width": bg.split("|")[1] || 3,
+                        "arrow-end": "classic-narrow-short",
+                    }),
+                    line: this.paper.path(path).attr({
+                        stroke: color,
+                        fill: "none",
+                        "arrow-end": "classic-narrow-short",
+                    }),
                     from: obj1,
                     to: obj2
                 };
@@ -250,7 +266,7 @@ define(function(require, exports, module) {
         }
     });
 
-    exports.TodoFlowView = Backbone.View.extend({
+    var TodoFlowView = Backbone.View.extend({
         el: null,
         model: null,
         collection: null,
@@ -285,4 +301,5 @@ define(function(require, exports, module) {
             Backbone.View.prototype.remove.apply(this, arguments);
         },
     });
+    exports.TodoFlowView = TodoFlowView;
 });
