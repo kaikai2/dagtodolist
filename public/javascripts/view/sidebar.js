@@ -12,6 +12,7 @@ define(function(require, exports, module) {
         events:{
             "click #newTask": "onNewTask",
             "keypress #newTask": "newOnEnter",
+            "shown a[data-toggle=tab]": "onTabShown",
             //"click #maintab a": "onTab",
         },
         initialize: function(){
@@ -39,6 +40,9 @@ define(function(require, exports, module) {
         onTab: function(e){
             e.preventDefault();
             $(e.target).tab('show');
+        },
+        onTabShown: function(e){
+            e.target.trigger("shown");
         },
     });
 });

@@ -68,13 +68,17 @@ a {
 
 .board {
     position: relative;
-}
-.graph {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+	overflow: hidden;
     padding: 1em;
     min-height: 30em;
+	border: 1px solid gray;
+}
+.graph {
+    position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+    padding: 0;
+
 }

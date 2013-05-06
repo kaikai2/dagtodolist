@@ -210,17 +210,25 @@ define(function(require, exports, module) {
     });
 
     var GraphContainerView = ListViewBase.extend({
+        event: {
+            "shown": "onResize"
+        },
         initialize: function(){
             if (this.options.paper){
                 this.paper = this.options.paper;
             }else{
                 var obj = this.$el.get(0);
                 this.paper = Raphael(obj, this.$el.width(), this.$el.height());
+                var self = this;
+                $(window).resize($.proxy(this.onResize, this));
+                $($.proxy(this.onResize, this));
             }
             // this.paper must initialize before addOne might be called
             ListViewBase.prototype.initialize.apply(this, arguments);
         },
-
+        onResize: function(){
+            this.paper.setSize(this.$el.width(), this.$el.height());
+        },
         addOne: function(model){
             var view = new this.ItemView({
                 model: model,
@@ -250,6 +258,7 @@ define(function(require, exports, module) {
         templateObj: null,
         events:{
             //"click #maintab a": "onTab",
+            "shown": "onTabShown",
         },
         initialize: function(){
             var graph = this.$(".graph");
@@ -269,7 +278,9 @@ define(function(require, exports, module) {
         render: function(){
             
         },
-
+        onTabShown: function(){
+            this.graph.trigger("shown");
+        },
         remove: function(){
             
             Backbone.View.prototype.remove.apply(this, arguments);
