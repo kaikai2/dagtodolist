@@ -16,7 +16,10 @@ define(function(require, exports, module) {
             this.model; // to model
             this.listenTo(this.model, "graphmove", this.updateDest);
             this.listenTo(this.from, "graphmove", this.updateSource);
+            
             this.update(undefined);
+            
+            this.model.trigger('graphbind');
         },
         clear: function(){
             if (this.line){
@@ -43,7 +46,7 @@ define(function(require, exports, module) {
                 obj2 = obj1;
             }
             var line = undefined;
-            var bg = '#555|5'
+            var bg = '#abe|3'
             if (obj1.line && obj1.from && obj1.to) {
                 line = obj1;
                 obj1 = line.from;
@@ -145,7 +148,9 @@ define(function(require, exports, module) {
             this.obj.drag(this.move, this.dragger, this.up, this, this, this);
             this.listenTo(this.model, 'change', this.updateStatus);
 
-            
+            this.move(Math.random() * 500, Math.random() * 300);
+
+            this.listenTo(this.model, "graphbind", this.move);
             this.render();
         },
         render: function(){
@@ -196,10 +201,12 @@ define(function(require, exports, module) {
             //this.obj.animate({"fill-opacity": .2}, 500);
         },
         move: function(dx, dy){
-            this.obj.translate(-this.ox, -this.oy);
-            this.obj.translate(dx, dy);
-            this.ox = dx;
-            this.oy = dy;
+            if (dx !== undefined && dy !== undefined){
+                this.obj.translate(-this.ox, -this.oy);
+                this.obj.translate(dx, dy);
+                this.ox = dx;
+                this.oy = dy;
+            }
             //for (var i = connections.length; i--;) {
             //this.paper.connection(connections[i]);
             //}
@@ -252,6 +259,7 @@ define(function(require, exports, module) {
                 listoptions: this.options.options,
                 paper: this.paper,
             });
+
             //this.$el.append(view.render().el);
             this.views.push(view);
             return view;
