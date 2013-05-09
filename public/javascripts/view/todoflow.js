@@ -140,7 +140,7 @@ define(function(require, exports, module) {
             this.obj = this.paper.set();
             this.rect = this.paper.rect(0, 0, 100, 38, 10);
             this.obj.push(this.rect);
-            this.text = this.paper.text(5, 5, this.model.get('name'));
+            this.text = this.paper.text(5, 8, this.model.get('name'));
             this.obj.push(this.text);
             this.setElement(this.obj.node);
             //var color = Raphael.getColor();
@@ -182,18 +182,26 @@ define(function(require, exports, module) {
             }else{
                 color = '#f89406';
             }
-            
-            this.text.attr({
-                text: this.model.get('name'),
-                "text-anchor": "start",
-            });
-            this.rect.attr({
+            var rectAttr = {
                 fill: color,
                 stroke: color,
                 "fill-opacity": 0,
                 "stroke-width": 2,
                 cursor: "move",
+            }
+            var text = this.model.get('name');
+            if (text.length > 8) {
+                rectAttr.title = text;
+                text = text.slice(0, 6) + '...';
+            }
+
+            this.text.attr({
+                text: text,
+                "font-size": 12,
+                "text-anchor": "start",
+                "width": 100,//this.rect.attr("width")
             });
+            this.rect.attr(rectAttr);
         },
         dragger: function () {
             this.ox = 0;
