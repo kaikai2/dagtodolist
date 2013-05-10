@@ -6,6 +6,15 @@ define(function(require, exports, module) {
     , Raphael = require('raphael.amd')
     , ListViewBase = require('view/listview').ListViewBase
     , TodoViewBase = require('view/todoview').TodoViewBase;
+    function clamp(x, low, high){
+        if (x < low){
+            return low;
+        }
+        if (x > high){
+            return high;
+        }
+        return x;
+    }
 
     var TodoDependsGraphView = Backbone.View.extend({
         el: null,
@@ -148,7 +157,8 @@ define(function(require, exports, module) {
             this.obj.drag(this.move, this.dragger, this.up, this, this, this);
             this.listenTo(this.model, 'change', this.updateStatus);
 
-            this.move(Math.random() * 500, Math.random() * 300);
+
+            this.moveto(Math.random() * 500, Math.random() * 300);
 
             this.listenTo(this.model, "graphbind", this.move);
             this.render();
@@ -204,25 +214,39 @@ define(function(require, exports, module) {
             this.rect.attr(rectAttr);
         },
         dragger: function () {
+            //this.obj.animate({"fill-opacity": .2}, 500);
             this.ox = 0;
             this.oy = 0;
-            //this.obj.animate({"fill-opacity": .2}, 500);
         },
         move: function(dx, dy){
             if (dx !== undefined && dy !== undefined){
-                this.obj.translate(-this.ox, -this.oy);
-                this.obj.translate(dx, dy);
+                dx = clamp(dx, -this.x, this.paper.width - this.rect.attr('width') - this.x);
+                dy = clamp(dy, -this.y, this.paper.height - this.rect.attr('height') - this.y);
+                this.obj.translate(dx-this.ox, dy-this.oy);
+                //this.obj.animate({transform: ["t", this.x + dx, this.y + dy].join(' ')}, 100, "linear");
                 this.ox = dx;
                 this.oy = dy;
             }
             //for (var i = connections.length; i--;) {
             //this.paper.connection(connections[i]);
             //}
-            this.model.trigger("graphmove", this.rect, dx, dy);
-            //this.depends.fire("graphmove", this.rect, dx, dy);
+            this.model.trigger("graphmove", this.rect);
+            this.paper.safari();
+        },
+        moveto: function(x, y){
+            this.x = clamp(x, 0, this.paper.width - this.rect.attr('width'));
+            this.y = clamp(y, 0, this.paper.height - this.rect.attr('height'));
+            this.obj.animate({
+                transform: ["t", this.x, this.y].join(' ')
+            }, 1000, "bounce", $.proxy(function(){
+                this.model.trigger("graphmove", this.rect);
+            }, this));
             this.paper.safari();
         },
         up: function () {
+            this.x += this.ox;
+            this.y += this.oy;
+            //this.obj.animate({transform: ["t", this.x, this.y].join(' ')});
             //this.obj.animate({"fill-opacity": 0}, 500);
         },
         remove: function(){
@@ -242,6 +266,7 @@ define(function(require, exports, module) {
 
     var GraphContainerView = ListViewBase.extend({
         event: {
+            "updateLayout": "updateLayout",
         },
         initialize: function(){
             if (this.options.paper){
@@ -273,6 +298,42 @@ define(function(require, exports, module) {
             return view;
         },
 
+        updateLayout: function(){
+
+            function covered(v1, v2){
+                return Math.abs(v1.x - v2.x) < 100 + 10 && Math.abs(v1.y - v2.y) < 38 + 10;
+            }
+            var collection = this.collection;
+            function related(v1, v2){
+                return collection.related(v1.model, v2.model);
+                // how to fetch the depends relation?
+                return false;
+            }
+            for(var i = 0, change = true; change && i < 20; i++){
+                change = false;
+                _.each(this.views, function(view, index, views){
+                    _.each(views, function(view2){
+                        if (view == view2)
+                            return;
+                        if (covered(view, view2)){
+                            var dx = view.x - view2.x, dy = view.y - view2.y;
+                            dx = Math.abs(dx) < 100 + 10 ? dx / 2 : 0;
+                            dy = Math.abs(dy) < 38 + 10 ? dy / 2 : 0;
+                            view.moveto(view.x + dx, view.y + dy);
+                            view2.moveto(view2.x - dx, view2.y - dy);
+                            change = true;
+                        } else if (related(view, view2)) {
+                            var dx = view.x - view2.x, dy = view.y - view2.y;
+                            dx = Math.abs(dx) > 2 * 100 + 10 ? dx / 2 : 0;
+                            dy = Math.abs(dy) > 2 * 38 + 10 ? dy / 2 : 0;
+                            view.moveto(view.x - dx, view.y - dy);
+                            view2.moveto(view2.x + dx, view2.y + dy);
+                            change = true;
+                        }
+                    });
+                }, this.views);
+            }
+        },
         remove: function(){
             if (this.options.paper !== this.paper){
                 this.paper.remove();
@@ -290,6 +351,7 @@ define(function(require, exports, module) {
         events:{
             //"click #maintab a": "onTab",
             "shown": "onTabShown",
+            "click #updateLayout": "updateLayout",
         },
         initialize: function(){
             var graph = this.$(".graph");
@@ -311,6 +373,9 @@ define(function(require, exports, module) {
         },
         onTabShown: function(){
             this.graph.resize();
+        },
+        updateLayout: function(){
+            this.graph.updateLayout();
         },
         remove: function(){
             

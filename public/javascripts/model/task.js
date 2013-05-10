@@ -37,7 +37,11 @@ define(function(require, exports, module){
             return new Tasks(this.filter(function(m){
                 return m.id in ids;
             }));
-        }
+        },
+        related: function(model1, model2){
+            var ids = _.object(model1.get('depends'), true);
+            return model2.id in ids;
+        },
     });
     _.extend(exports, {
         Task: Task,
