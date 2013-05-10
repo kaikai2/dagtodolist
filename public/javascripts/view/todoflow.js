@@ -301,11 +301,11 @@ define(function(require, exports, module) {
         updateLayout: function(){
 
             function covered(v1, v2){
-                return Math.abs(v1.x - v2.x) < 100 + 10 && Math.abs(v1.y - v2.y) < 38 + 10;
+                return Math.abs(v1.x - v2.x) < 100 + 10 && Math.abs(v1.y - v2.y) < 38 + 15;
             }
             var collection = this.collection;
-            function related(v1, v2){
-                return collection.related(v1.model, v2.model);
+            function isDependOn(v1, v2){
+                return collection.isDependOn(v1.model, v2.model);
                 // how to fetch the depends relation?
                 return false;
             }
@@ -315,21 +315,29 @@ define(function(require, exports, module) {
                     _.each(views, function(view2){
                         if (view == view2)
                             return;
-                        if (covered(view, view2)){
-                            var dx = view.x - view2.x, dy = view.y - view2.y;
-                            dx = Math.abs(dx) < 100 + 10 ? dx / 2 : 0;
-                            dy = Math.abs(dy) < 38 + 10 ? dy / 2 : 0;
-                            view.moveto(view.x + dx, view.y + dy);
-                            view2.moveto(view2.x - dx, view2.y - dy);
-                            change = true;
-                        } else if (related(view, view2)) {
+                        if (isDependOn(view, view2)) {
                             var dx = view.x - view2.x, dy = view.y - view2.y;
                             dx = Math.abs(dx) > 2 * 100 + 10 ? dx / 2 : 0;
-                            dy = Math.abs(dy) > 2 * 38 + 10 ? dy / 2 : 0;
+                            if (dy < 38){
+                                dy = (dy - 38);
+                            }else{
+                                dy = Math.abs(dy) > 2 * 38 + 15 ? dy / 2 : 0;
+                            }
                             view.moveto(view.x - dx, view.y - dy);
                             view2.moveto(view2.x + dx, view2.y + dy);
                             change = true;
-                        }
+                        } else if (covered(view, view2)){
+                            var dx = view.x - view2.x, dy = view.y - view2.y;
+                            dx = Math.abs(dx) < 100 + 10 ? (
+                                dx < 0 ? -(100 + 10 - Math.abs(dx)) : 100 + 10 - Math.abs(dx)
+                                ) / 2 : 0;
+                            dy = Math.abs(dy) < 38 + 15 ? (
+                                dy < 0 ? -(38 + 15 - Math.abs(dy)) : 38 + 15 - Math.abs(dy)
+                                ) / 2 : 0;
+                            view.moveto(view.x + dx, view.y + dy);
+                            view2.moveto(view2.x - dx, view2.y - dy);
+                            change = true;
+                        } 
                     });
                 }, this.views);
             }
