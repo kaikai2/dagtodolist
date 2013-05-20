@@ -14,7 +14,7 @@ define(function(require, exports, module){
         checkLogin: function(next){
             var result = null;
             var self = this;
-            $.getJSON('/user/check', function(json){
+            $.getJSON('/user/check', {_cache: new Date().getTime()}, function(json){
                 result = json;
             }).complete(function(jqXHR, textStatus){
                 if (textStatus != 'success'){
@@ -33,7 +33,8 @@ define(function(require, exports, module){
             var self = this;
             $.getJSON('/user/login', {
                 username: data.name,
-                password: data.password
+                password: data.password,
+                _cache: new Date().getTime()
             }, function(json){
                 result = json;
             }).complete(function(jqXHR, textStatus){
