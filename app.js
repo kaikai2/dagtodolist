@@ -11,6 +11,13 @@ var express = require('express')
 , mongoose = require('mongoose')
 , path = require('path');
 
+// 数据库配置信息
+var db_name = 'dagtodolist';                // 数据库名，你自己的数据库名（可从管理中心查看到）
+var db_host =  'localhost';    // 数据库地址
+var db_port =  27017;  		// 数据库端口
+var username = '';               // 用户名
+var password = '';               // 密码
+var mongodbUrl = ["mongodb://", username, ':', password, '@', db_host, ":", db_port, "/", db_name].join('');
 var app = express();
 
 app.configure(function(){
@@ -39,7 +46,7 @@ app.get('/user/logout', user.logout);
 restful.route(app, '/user', [], user);
 restful.route(app, '/todo', [], require('./routes/todo'));
 
-mongoose.connect('localhost', 'dagtodolist');
+mongoose.connect(mongodbUrl);
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log("Express server listening on port " + app.get('port'));
