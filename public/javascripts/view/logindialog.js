@@ -22,11 +22,16 @@ define(function(require, exports, module) {
                 show: false,
                 backdrop: 'static',
             });
+            this.showed = false;
         },
 
         show: function(){
+          if (this.showed){
+            this.cancel();
+          }
             this.$("input").val('');
             this.$el.modal('show');
+            this.showed = true;
         },
         render: function(){
         },
@@ -38,19 +43,22 @@ define(function(require, exports, module) {
             }
         },
         login: function(){
-            var $el = this.$el;
+            this.cancel();
+            var self = this;
             this.model.login({
                 name: this.$("[name=name]").val(),
                 password: this.$("[name=password]").val(),
             }, function(err){
                 if (!err){
-                    $el.modal('hide');
                     Backbone.history.navigate("check", {trigger: true});
+                }else{
+                  self.show();
                 }
             });
         },
         cancel: function(){
             this.$el.modal('hide');
+            this.showed = false;
         },
         remove: function(){
             this.model = undefined;
