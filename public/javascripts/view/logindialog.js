@@ -21,6 +21,7 @@ define(function(require, exports, module) {
             this.$el.modal({
                 show: false,
                 backdrop: 'static',
+                keyboard: false,
             });
             this.showed = false;
         },
