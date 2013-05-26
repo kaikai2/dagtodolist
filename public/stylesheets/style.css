@@ -4,9 +4,9 @@ body {
 }
 
 @media (max-width: 979px) {
-body {
-    padding-top: 0px;
-}       
+    body {
+        padding-top: 0px;
+    }       
 }
 
 
@@ -18,21 +18,30 @@ a {
     list-style: none;
 }
 
-/*.todolist li .toggle {
+/*
+.todolist li .toggle {
     position: absolute;
 }
 
 .todolist li label {
     padding-left: 30px;
-}*/
+}
+*/
+.todolist li {
+    border-top: 1px solid gray;
+}
 
 .todolist li .view {
     position: relative;
     padding: 10px;
-    border-top: 1px solid gray;
+
+}
+.todolist li:first-child {
+    border-top: 0px;
 }
 .todolist li:not(.editing) .edit,
-.todolist li:not(.detail) .detail,
+.todolist li:not(.detail) .showondetail,
+.todolist li.detail .hideondetail,
 .todolist .state.done > .no-done,
 .todolist .state:not(.done) > .done,
 .todolist .state.ready > .no-ready,
@@ -68,17 +77,17 @@ a {
 
 .board {
     position: relative;
-	overflow: hidden;
+    overflow: hidden;
     padding: 1em;
     min-height: 30em;
-	border: 1px solid gray;
+    border: 1px solid gray;
 }
 .graph {
     position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     padding: 0;
-
+    
 }
