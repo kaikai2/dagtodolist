@@ -173,6 +173,7 @@ define(function(require, exports, module) {
             };
             
             this.model.save(value);
+            return false;
         },
         newDepend: function(){
             var dlg = new NewTodoDialog({
@@ -181,6 +182,7 @@ define(function(require, exports, module) {
                 collection: this.collection,
             });
             dlg.render();
+            return false;
         },
         // If you hit `enter`, we're through editing the item.
         updateOnEnter: function (e) {
