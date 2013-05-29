@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone')
     , $ = require('jquery')
     , bootstrap = require('bootstrap')
+    , bootstrap_datetimepicker = require('bootstrap-datetimepicker')
     , NewTodoDialog = require('view/newtododialog').NewTodoDialog
     , ListView = require('view/listview').ListView
     , DependsView = require('view/dependsview').DependsView
@@ -105,7 +106,13 @@ define(function(require, exports, module) {
             this.$el.toggleClass('completed', this.model.get('done'));
             this.updateVisible();
             this.$input = this.$('.edit');
-
+            this.$(".datetime").datetimepicker({
+                language: 'zh-cn',
+                pickSeconds: false,
+                pick12HourFormat: false,
+                pickTime: true,
+                pickDate: true,
+            });
             this.depends = new ListView({
                 el: this.$(".depends"),
                 ItemView: DependsView,

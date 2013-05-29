@@ -7,6 +7,7 @@
 </title>
 <link rel="stylesheet" href="/stylesheets/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="/stylesheets/bootstrap-responsive.css" type="text/css">
+<link rel="stylesheet" href="/stylesheets/bootstrap-datetimepicker.min.css" type="text/css">
 <link rel="stylesheet" href="/stylesheets/style.css" type="text/css">
 
 </head>
@@ -155,7 +156,7 @@
 </form>
 </div>
 </div>
-</div>                    
+</div>
 </div>
 </div>
 <div class="modal-footer">
@@ -204,32 +205,58 @@
 <textarea class="content span12">{$model.content}
 </textarea>
 </div>
-<div class="input-prepend">
-<span class="add-on">估计消耗时间
+
+<label class="">估计消耗时间
+</label>
+<div class="input-append datetime">
+<input type="text" data-format="yyyy年MM月dd日 hh:mm" class="span5 estimatedTimeInHours" value="{$model.estimatedTimeInHours}">
+<span class="add-on">
+<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+</i>
 </span>
-<input type="datetime" class="span5 estimatedTimeInHours"   value="{$model.estimatedTimeInHours}">
 </div>
-<div class="input-prepend">
-<span class="add-on">预计完成时间
+
+<label class="">预计完成时间
+</label>
+<div class="input-append datetime">
+<input type="text" data-format="yyyy年MM月dd日 hh:mm" class="span5 estimatedEndTime" readonly value="{$model.estimatedEndTime}">
+<span class="add-on">
+<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+</i>
 </span>
-<input type="datetime" class="span5 estimatedEndTime" readonly value="{$model.estimatedEndTime}">
 </div>
-<div class="input-prepend">
-<span class="add-on">创建时间
+
+<label class="">创建时间
+</label>
+<div class="input-append datetime">
+<input type="text" data-format="yyyy年MM月dd日 hh:mm" class="createtime" readonly value="{$model.createTime}">
+<span class="add-on">
+<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+</i>
 </span>
-<input type="datetime" class="createtime" readonly value="{$model.createTime}">
 </div>
-<div class="input-prepend">
-<span class="add-on">最后期限
+
+<label class="">最后期限
+</label>
+<div class="input-append datetime">
+<input type="text" data-format="yyyy年MM月dd日 hh:mm" class="deadline" value="{$model.deadlineTime}">
+<span class="add-on">
+<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+</i>
 </span>
-<input type="datetime" class="deadline" value="{$model.deadlineTime}">
 </div>
+
 {if $model.done}
-<div class="input-prepend">
-<span class="add-on">完成时间
+<label class="">完成时间
+</label>
+<div class="input-append datetime">
+<input type="text" data-format="yyyy年MM月dd日 hh:mm" class="closetime" readonly value="{$model.closeTime}">
+<span class="add-on">
+<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+</i>
 </span>
-<input type="datetime" class="closetime" readonly value="{$model.closeTime}">
 </div>
+
 {/if}
 </div>
 <div class="span7">

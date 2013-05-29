@@ -40,12 +40,14 @@ requirejs.config({
     map:{
 	"*": {
 	    'smart': 'smart-2.9.min',
+        'bootstrap-datetimepicker': 'bootstrap-datetimepicker.min',
 	},
     },
     shim: {
 	underscore: {exports: '_'},
 	backbone: {deps:["underscore", "jquery"], exports: "Backbone"},
-        bootstrap: {deps: ["jquery"]},
+    bootstrap: {deps: ["jquery"]},
+    "bootstrap-datetimepicker": {deps: ["jquery", "bootstrap"]},
     }
 });
 requirejs(['underscore', 'smart', 'raphael.amd', 'app/app'], function(_,s){
