@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     , ENTER_KEY = 13
     , _ = require('underscore')
     , Task = require('model/task').Task
+    , Tasks = require('model/task').Tasks
     , ListView = require('view/listview').ListView
     , TodoView = require('view/todoview').TodoView
     , TypeAheadView_Pinyin = require('view/typeaheadview_py').TypeAheadView_Pinyin;
@@ -23,14 +24,11 @@ define(function(require, exports, module) {
             this.$el.html(this.options.template);
             this.$el.addClass("modal hide fade");
             this.$el.modal();
-            var unDoneTasks = this.collection.where({done: false});
-            var names = _.map(unDoneTasks, function(model){
-                return model.get('name');
-            });
-
             this.findDependsView = new TypeAheadView_Pinyin({
                 el: this.$("#selecttask input[name=id]"),
-                names: names,
+                collection: this.collection,
+                name: 'name',
+                filter: {done: false},
             });
         },
         
@@ -57,13 +55,11 @@ define(function(require, exports, module) {
                     }
                 });
             }else if (curId == "selecttask"){
-                var selIndex = this.findDependsView.getSelectIndex();
-                if (selIndex != -1){
-                    var model = this.collection.at(selIndex);
-                    if (model){
-                        this._addDepends(model.id);
-                        this.$el.modal('hide');
-                    }
+                var selCid = this.findDependsView.getSelect();
+                var model = this.collection.get(selCid);
+                if (model){
+                    this._addDepends(model.id);
+                    this.$el.modal('hide');
                 }
             }
         },
