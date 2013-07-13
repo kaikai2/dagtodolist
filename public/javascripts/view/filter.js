@@ -96,7 +96,7 @@ define(function(require, exports, module) {
                     }));
                 }
             });
-            this.$filterByName = this.$(".filter input");
+            this.$filterByName = this.$("input");
             this.listenTo(this.collection, "change", this.updateFilter);
             this.updateFilter();
         },
