@@ -5,7 +5,10 @@ define(function(require, exports, module) {
     , _ = require('underscore')
     , Raphael = require('raphael.amd')
     , ListViewBase = require('view/listview').ListViewBase
-    , TodoViewBase = require('view/todoview').TodoViewBase;
+    , TodoViewBase = require('view/todoview').TodoViewBase
+    , FilterView = require('view/filter').FilterView
+    ;
+
     function clamp(x, low, high){
         if (x < low){
             return low;
@@ -22,10 +25,16 @@ define(function(require, exports, module) {
             this.paper = this.options.paper;
             this.from = this.options.listoptions.from; // from model
             this.rect = this.options.listoptions.rect; // from obj
+            this.filter = this.options.listoptions.filter;
             this.model; // to model
             this.listenTo(this.model, "graphmove", this.updateDest);
             this.listenTo(this.from, "graphmove", this.updateSource);
-            
+
+            this.listenTo(this.model, "visible", this.updateVisible);
+            this.listenTo(this.from, "visible", this.updateVisible);
+
+            this.listenTo(this.filter, "change", this.updateVisible);
+
             this.update(undefined);
             
             this.model.trigger('graphbind');
@@ -48,8 +57,20 @@ define(function(require, exports, module) {
         updateSource: function(sourceObj){
             this.update(this.dstObj);
         },
+        updateVisible: function(){
+            if (this.line === undefined){
+                return;
+            }
+            if (this.model.isHidden(this.filter) || this.from.isHidden(this.filter)){
+                this.line.bg.hide();
+                this.line.line.hide();
+            }else{
+                this.line.bg.show();
+                this.line.line.show();
+            }
+        },
         update: function(obj2, dx, dy){
-            this.clear();
+            //this.clear();
             var obj1 = this.rect;
             if (!obj2){
                 obj2 = obj1;
@@ -109,9 +130,9 @@ define(function(require, exports, module) {
             var attr = {
                 path: path
             };
-            if (line && line.line) {
-                line.bg && line.bg.attr(attr);
-                line.line.attr(attr);
+            if (this.line && this.line.line) {
+                this.line.bg && this.line.bg.attr(attr);
+                this.line.line.attr(attr);
             } else {
                 var color = typeof line == "string" ? line : "#000";
                 this.line = {
@@ -155,7 +176,9 @@ define(function(require, exports, module) {
             //var color = Raphael.getColor();
 
             this.obj.drag(this.move, this.dragger, this.up, this, this, this);
+            this.listenTo(this.model, 'visible', this.updateVisible);
             this.listenTo(this.model, 'change', this.updateStatus);
+            this.listenTo(this.filter, 'change', this.updateVisible);
 
 
             this.moveto(Math.random() * 500, Math.random() * 300);
@@ -177,7 +200,7 @@ define(function(require, exports, module) {
                 options: {
                     from: this.model,
                     rect: this.rect,
-                    
+                    filter: this.filter,
                 },
             });
 
@@ -212,6 +235,13 @@ define(function(require, exports, module) {
                 "width": 100,//this.rect.attr("width")
             });
             this.rect.attr(rectAttr);
+        },
+        updateVisible: function(){
+            if (this.isHidden()){
+                this.obj.hide();
+            }else{
+                this.obj.show();
+            }
         },
         dragger: function () {
             //this.obj.animate({"fill-opacity": .2}, 500);
@@ -364,12 +394,16 @@ define(function(require, exports, module) {
         initialize: function(){
             var graph = this.$(".graph");
 
+            this.filterView = new FilterView({
+                el: this.$('.filter')
+            });
+
             this.graph = new GraphContainerView({
                 el: graph,
-                collection: this.collection,
                 ItemView: TodoGraphView,
+                collection: this.collection,
                 options: {
-
+                    filter: this.filterView.collection
                 }
             })
         },
@@ -386,7 +420,10 @@ define(function(require, exports, module) {
             this.graph.updateLayout();
         },
         remove: function(){
-            
+            this.graph.remove();
+            this.graph = undefined;
+            this.filterView.remove();
+            this.filterView = undefined;
             Backbone.View.prototype.remove.apply(this, arguments);
         },
     });

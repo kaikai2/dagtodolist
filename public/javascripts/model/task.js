@@ -21,6 +21,16 @@ define(function(require, exports, module){
             this.set('done', !this.get('done'));
             this.save();
         },
+        isHidden: function(filter){
+            var model = this;
+            var textFilter = filter.findWhere({type: 'text'});
+            if (!textFilter.get('filte').call(textFilter, model))
+                return true;
+            return !_.any(filter.where({selected: true}), function(f){
+                var filteFunc = f.get('filte');
+                return filteFunc.call(f, model);
+            });
+        },
     },{
     });
     var Tasks = Backbone.Collection.extend({
