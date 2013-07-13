@@ -1,7 +1,24 @@
 define(function(require, exports, module) {
     var _ = require('underscore')
     , pinyin = require('pinyin');
-
+    
+    var convertMap = {
+        '(': '\\(',
+        ')': '\\)',
+        '.': '\\.',
+        '*': '\\*',
+        '+': '\\+',
+        '[': '\\[',
+        ']': '\\]',
+        '?': '\\?',
+        '\\': '\\\\',
+    };
+    function convert(c){
+        if (c in convertMap){
+            return convertMap[c];
+        }
+        return c;
+    }
     function match(candidateList, queryString){
         /* '大哥去tmd干活'
         var candidateList = [
@@ -15,13 +32,18 @@ define(function(require, exports, module) {
         queryString = 'qug活';
         */
         var res = [];
-        for (var i = 0; i < candidateList.length; i++){
+        for (var i = 0, li = candidateList.length; i < li; i++){
             var candidate = candidateList[i];
-            for (var j = 0; j < candidate.length; j++){
+            for (var j = 0, lj = candidate.length; j < lj; j++){
                 var c = candidate[j];
                 if (c.length > 1){
                     var cA = c.split('');
+                    for (var k = 0, lk = cA.length; k < lk; k++){
+                        cA[k] = convert(cA[k]);
+                    }
                     candidate[j] = cA[0] + cA.slice(1).join('?') + '?';
+                }else{
+                    candidate[j] = convert(c);
                 }
             }
             res.push(candidate.join('|'));
